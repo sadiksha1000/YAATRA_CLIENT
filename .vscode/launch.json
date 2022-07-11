@@ -1,0 +1,588 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "package_im_stepper-master",
+      "cwd": "home/bishalrajshrestha/Downloads/package_im_stepper-master",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "package_im_stepper-master (profile mode)",
+      "cwd": "home/bishalrajshrestha/Downloads/package_im_stepper-master",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "package_im_stepper-master (release mode)",
+      "cwd": "home/bishalrajshrestha/Downloads/package_im_stepper-master",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "workwith_api",
+      "cwd": "home/bishalrajshrestha/Downloads/workwith_api",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "workwith_api (profile mode)",
+      "cwd": "home/bishalrajshrestha/Downloads/workwith_api",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "workwith_api (release mode)",
+      "cwd": "home/bishalrajshrestha/Downloads/workwith_api",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "myhttp-master",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/Desktop/myhttp-master",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "myhttp-master (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/Desktop/myhttp-master",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "myhttp-master (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/Desktop/myhttp-master",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "temp",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/git of android/temp",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "temp (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/git of android/temp",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "temp (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/git of android/temp",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "container_example",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/container_example",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "container_example (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/container_example",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "container_example (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/container_example",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "dicee",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/dicee",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "dicee (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/dicee",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "dicee (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/dicee",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "first_class",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/first_class",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "first_class (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/first_class",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "first_class (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/first_class",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "i_am_rich",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/i_am_rich",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "i_am_rich (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/i_am_rich",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "i_am_rich (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/i_am_rich",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "ksudha_android_app",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/ksudha_android_app",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "ksudha_android_app (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/ksudha_android_app",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "ksudha_android_app (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/ksudha_android_app",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "magic-8-ball-flutter",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/magic-8-ball-flutter",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "magic-8-ball-flutter (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/magic-8-ball-flutter",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "magic-8-ball-flutter (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/magic-8-ball-flutter",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "mi_card_flutter",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/mi_card_flutter",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "mi_card_flutter (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/mi_card_flutter",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "mi_card_flutter (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/mi_card_flutter",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "my_new_proj",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/my_new_proj",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "my_new_proj (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/my_new_proj",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "my_new_proj (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/my_new_proj",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "physical_class",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/physical_class",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "physical_class (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/physical_class",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "physical_class (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/physical_class",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "quizzler",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/quizzler",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "quizzler (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/quizzler",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "quizzler (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/quizzler",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "quizzler-challenge",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/quizzler-challenge",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "quizzler-challenge (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/quizzler-challenge",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "quizzler-challenge (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/quizzler-challenge",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "testing_app",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/testing_app",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "testing_app (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/testing_app",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "testing_app (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/testing_app",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "xylophone-flutter",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/xylophone-flutter",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "xylophone-flutter (profile mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/xylophone-flutter",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "xylophone-flutter (release mode)",
+      "cwd": "mnt/7d994da8-8f8d-49e2-a3eb-b4ea4b0a3bf2/temp/xylophone-flutter",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "ez_tickets_app-master",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/ez_tickets_app-master",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "ez_tickets_app-master (profile mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/ez_tickets_app-master",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "ez_tickets_app-master (release mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/ez_tickets_app-master",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "ftc-forum-flutter-app-master",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/ftc-forum-flutter-app-master",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "ftc-forum-flutter-app-master (profile mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/ftc-forum-flutter-app-master",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "ftc-forum-flutter-app-master (release mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/ftc-forum-flutter-app-master",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "yaatra-client-F20U3",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-client-F20U3",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "yaatra-client-F20U3 (profile mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-client-F20U3",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "yaatra-client-F20U3 (release mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-client-F20U3",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "yaatra-client-F21",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-client-F21",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "yaatra-client-F21 (profile mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-client-F21",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "yaatra-client-F21 (release mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-client-F21",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "yaatra-client-F23U1",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-client-F23U1",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "yaatra-client-F23U1 (profile mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-client-F23U1",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "yaatra-client-F23U1 (release mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-client-F23U1",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "yaatra-operator-F16U1",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-operator-F16U1",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "yaatra-operator-F16U1 (profile mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-operator-F16U1",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "yaatra-operator-F16U1 (release mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-operator-F16U1",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "yaatra-operator-development",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-operator-development",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "yaatra-operator-development (profile mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-operator-development",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "yaatra-operator-development (release mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-operator-development",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "yaatra-operator-development (1)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-operator-development (1)",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "yaatra-operator-development (1) (profile mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-operator-development (1)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "yaatra-operator-development (1) (release mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/agile/yaatra-operator-development (1)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "client",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/yaatra/client",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "client (profile mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/yaatra/client",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "client (release mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/yaatra/client",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "cloned",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/yaatra/cloned",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "cloned (profile mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/yaatra/cloned",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "cloned (release mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/yaatra/cloned",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "route_wala",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/yaatra/route_wala",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "route_wala (profile mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/yaatra/route_wala",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "route_wala (release mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/yaatra/route_wala",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "yaatra-operator-development (1)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/yaatra/yaatra-operator-development (1)",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "yaatra-operator-development (1) (profile mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/yaatra/yaatra-operator-development (1)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "yaatra-operator-development (1) (release mode)",
+      "cwd": "mnt/b843c873-04c6-4ed4-989b-66ae05f7224f/yaatra/yaatra-operator-development (1)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    }
+  ]
+}

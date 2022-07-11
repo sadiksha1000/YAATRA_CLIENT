@@ -1,0 +1,95 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../../../../core/config/response_model.dart';
+import '../../../../../core/errors/exception.dart';
+import '../../../../../core/server/server.dart';
+import '../../../../core/errors/failure.dart';
+import '../models/station_model.dart';
+import '../models/trip_model.dart';
+
+abstract class TripRemoteDataSource {
+  Future<List<TripModel>> fetchAllTrips({
+    required String selectedFromStation,
+    required String selectedtoStation,
+    required DateTime selectedDate,
+    required int seats,
+  }) {
+    throw UnimplementedError();
+  }
+
+  fetchAllStations() {
+    throw UnimplementedError();
+  }
+}
+
+class TripRemoteDataSourceImpl implements TripRemoteDataSource {
+  final http.Client client;
+
+  TripRemoteDataSourceImpl({
+    required this.client,
+  });
+
+  @override
+  Future<List<TripModel>> fetchAllTrips({
+    required String selectedFromStation,
+    required String selectedtoStation,
+    required DateTime selectedDate,
+    required int seats,
+  }) async {
+    var tripUrl = '$serverUrl/trip/search';
+    try {
+      final response = await client.post(Uri.parse(tripUrl), body: {
+        'selectedFromStation': selectedFromStation,
+        'selectedtoStation': selectedtoStation,
+        'selectedDate': selectedDate.toIso8601String(),
+        'seats': seats.toString(),
+      });
+      if (response.statusCode == 200) {
+        var decodedResponse = ResponseModel.fromJson(response.body);
+        var data = decodedResponse.data;
+        var message = decodedResponse.message;
+        print("data: $data");
+        print("Message: $message");
+        List<TripModel> trips = [];
+        data.forEach((trip) {
+          trips.add(TripModel.fromMap(trip, message: decodedResponse.message));
+        });
+        print("Trip $trips");
+        return trips;
+      } else {
+        throw ServerFailure.fromJson(json.decode(response.body));
+      }
+    } catch (e) {
+      print("ERR ::" + e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<StationModel>> fetchAllStations() async {
+    var stationUrl = '$serverUrl/admin/station/';
+    try {
+      final response = await client.get(Uri.parse(stationUrl));
+      print("Fetch all stations response.body: ${response.body}");
+      if (response.statusCode == 200) {
+        var decodedResponse = ResponseModel.fromJson(response.body);
+        var data = decodedResponse.data;
+        print("station data: $data");
+        var stations = data
+            .map((station) =>
+                StationModel.fromMap(station, message: decodedResponse.message))
+            .toList();
+        return stations;
+        // List<StationModel> stations =data.map((key, value) => null) as
+        // return stations;
+        // return (json.decode(response.body))
+        //     .map((station) => StationModel.fromJson(station))
+        //     .toList();
+      } else {
+        throw ServerFailure.fromJson(json.decode(response.body));
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+}
