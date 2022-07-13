@@ -175,6 +175,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                       },
                                     ))
                                   : uploadProfileImage(_passengerProfileCubit),
+                              SizedBox(height: size(context).height * 0.02),
                               Column(
                                 children: [
                                   CustomTextFormField(
