@@ -55,7 +55,7 @@ class Booking extends Equatable {
   Map<String, dynamic> toMap() {
     return {
       '_id': id,
-      'tripId': tripId,
+      'tripId': tripId.toMap(),
       'userId': userId.toMap(),
       'name': name,
       'phone': phone,
