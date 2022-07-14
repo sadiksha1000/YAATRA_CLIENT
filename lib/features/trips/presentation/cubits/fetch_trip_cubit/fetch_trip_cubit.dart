@@ -1,11 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import '../../../../../core/network/network_info.dart';
 import '../../../../../core/utils/input_validator.dart';
 
-import '../../../../../core/utils/status.dart';
 import '../../../data/models/station_model.dart';
 import '../../../data/models/trip_model.dart';
 import '../../../domain/entities/station.dart';
@@ -84,7 +82,7 @@ class FetchTripCubit extends Cubit<FetchTripState> with InputValidatorMixin {
       (tripModel) => {
         emit(state.copyWith(
           successMessage: "Trips fetched successfully",
-          trip: tripModel as List<TripModel>,
+          trip: tripModel ,
         ))
       },
     );

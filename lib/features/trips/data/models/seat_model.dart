@@ -10,7 +10,8 @@ class SeatModel extends Seat {
       required String label,
       required String seatId,
       required int ticketPrice,
-      required String message})
+      required String message,
+      required int position})
       : super(
           busId: busId,
           isActive: isActive,
@@ -19,16 +20,19 @@ class SeatModel extends Seat {
           seatId: seatId,
           ticketPrice: ticketPrice,
           message: message,
+          position: position,
         );
 
   static const empty = SeatModel(
-      busId: '',
-      isActive: false,
-      isAvailable: false,
-      label: '',
-      seatId: '',
-      ticketPrice: 0,
-      message: '');
+    busId: '',
+    isActive: false,
+    isAvailable: false,
+    label: '',
+    seatId: '',
+    ticketPrice: 0,
+    message: '',
+    position: 0,
+  );
 
   bool get isEmpty => this == SeatModel.empty;
   bool get isNotEmpty => this != SeatModel.empty;
@@ -42,6 +46,7 @@ class SeatModel extends Seat {
         seatId,
         ticketPrice,
         message,
+        position,
       ];
 
   Map<String, dynamic> toMap() {
@@ -53,6 +58,7 @@ class SeatModel extends Seat {
       'isAvailable': isAvailable,
       'isActive': isActive,
       'message': message,
+      'position': position,
     };
   }
 
@@ -65,6 +71,7 @@ class SeatModel extends Seat {
       isAvailable: map['isAvailable'] ?? false,
       isActive: map['isActive'] ?? false,
       message: map['message'] ?? '',
+      position: map['position'] ?? 0,
     );
   }
 

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_cubit.dart';
 import 'seat_select_screen.dart';
 import '../widgets/view_trip_widget.dart';
 
 import '../../../../core/config/size.dart';
-import '../../../../core/utils/status.dart';
 import '../../../../core/widgets/custom_appbar.dart';
 import '../../domain/entities/station.dart';
 import '../../domain/entities/trip.dart';
@@ -86,7 +83,6 @@ class _ViewBusesScreenState extends State<ViewBusesScreen> {
                                   snapshot.hasData
                                       ? snapshot.data!.stationName
                                       : "Select To",
-                                 
                                   style: Theme.of(context).textTheme.subtitle1,
                                 );
                               }),
@@ -107,20 +103,8 @@ class _ViewBusesScreenState extends State<ViewBusesScreen> {
                     children: [
                       IconButton(
                           onPressed: () {},
-                          icon: Icon(Icons.arrow_left_rounded)),
-
-                      // SizedBox(
-                      //   width: 50.0,
-                      //   child: TextFormField(
-                      //     onTap: () {},
-                      //     decoration: InputDecoration(
-                      //       labelText: "Date",
-                      //       hintText: "hint text",
-                      //       labelStyle: TextStyle(fontSize: 10),
-                      //     ),
-                      //   ),
-                      // ),
-                      Container(
+                          icon: const Icon(Icons.arrow_left_rounded)),
+                      SizedBox(
                         width: size(context).width * 0.27,
                         child: StreamBuilder<DateTime>(
                             stream: _fetchTripCubit.selectedDate,
@@ -137,39 +121,25 @@ class _ViewBusesScreenState extends State<ViewBusesScreen> {
                                             .toIso8601String()
                                             .split('T')[0]
                                         : "Select Date",
-                                    labelStyle: TextStyle(fontSize: 10),
+                                    labelStyle: const TextStyle(fontSize: 10),
                                     border: InputBorder.none),
                               );
                             }),
                       ),
                       IconButton(
                           onPressed: () {},
-                          icon: Icon(Icons.arrow_right_rounded))
+                          icon: const Icon(Icons.arrow_right_rounded))
                     ],
                   ),
                 ),
                 // Card
                 Container(
-                  height: size(context).height * 0.14,
-                  decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(size(context).width * 0.02),
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: size(context).height * 0.08,
-                        color: Color.fromARGB(36, 206, 203, 203),
-                        spreadRadius: size(context).height * 0.03,
-                      ),
-                    ],
-                  ),
-                  margin: EdgeInsets.all(size(context).height * 0.02),
+                  height: size(context).height * 0.73,
                   padding: EdgeInsets.all(size(context).height * 0.01),
                   child: BlocBuilder<FetchTripCubit, FetchTripState>(
                     builder: (context, state) {
-                      print("Trips: ${state.trip}");
                       return state.trip.isEmpty
-                          ? Text('No trips available')
+                          ? const Text('No trips available')
                           : ListView.builder(
                               itemCount: state.trip.length,
                               itemBuilder: (ctx, index) {
@@ -177,9 +147,11 @@ class _ViewBusesScreenState extends State<ViewBusesScreen> {
                                 return ViewTrip(
                                   trip: _trip,
                                   onPressed: (trip) {
-                                    print("Trippppy: $trip");
+                                    context
+                                        .read<BookingCubit>()
+                                        .changeSelectedTrip(trip);
                                     Navigator.pushNamed(
-                                        context,SelectSeatScreen.routeName,
+                                        context, SelectSeatScreen.routeName,
                                         arguments: trip);
                                   },
                                 );

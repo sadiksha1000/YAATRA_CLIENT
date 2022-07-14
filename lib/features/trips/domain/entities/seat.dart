@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class Seat extends Equatable {
+  final int position;
   final String seatId;
   final String busId;
   final String label;
@@ -17,6 +18,7 @@ class Seat extends Equatable {
     required this.seatId,
     required this.ticketPrice,
     required this.message,
+    required this.position,
   });
 
   static const empty = Seat(
@@ -26,7 +28,8 @@ class Seat extends Equatable {
       label: '',
       seatId: '',
       ticketPrice: 0,
-      message: '');
+      message: '',
+      position: 0);
 
   bool get isEmpty => this == Seat.empty;
   bool get isNotEmpty => this != Seat.empty;
@@ -38,8 +41,9 @@ class Seat extends Equatable {
       isAvailable: map['isAvailable'] ?? false,
       label: map['label'] ?? '',
       seatId: map['_id'] ?? '',
-      ticketPrice: map['ticketPrice'] ?? 0,
+      ticketPrice: map['ticketPrice'] ?? '',
       message: map['message'] ?? '',
+      position: map['position'] ?? 0,
     );
   }
 
@@ -52,6 +56,7 @@ class Seat extends Equatable {
       'isAvailable': isAvailable,
       'isActive': isActive,
       'message': message,
+      'position': position,
     };
   }
 
@@ -64,5 +69,6 @@ class Seat extends Equatable {
         seatId,
         ticketPrice,
         message,
+        position,
       ];
 }

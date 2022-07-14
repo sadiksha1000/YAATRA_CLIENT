@@ -9,7 +9,7 @@ class FetchTripsUseCase {
 
   FetchTripsUseCase(this.tripRepository);
 
-  Future<Either<Failure, List<Trip>>> call({
+  Future<Either<Failure, List<dynamic>>> call({
     required String selectedFromStation,
     required String selectedtoStation,
     required DateTime selectedDate,

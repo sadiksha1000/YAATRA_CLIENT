@@ -1,7 +1,9 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_cubit.dart';
+import 'package:yaatra_client/features/trips/presentation/cubits/fetch_trip_cubit/fetch_trip_cubit.dart';
+import 'package:yaatra_client/features/trips/presentation/widgets/seat_widget.dart';
 import 'reservation_screen.dart';
 
 import '../../../../core/config/size.dart';
@@ -12,7 +14,7 @@ import '../../../../core/widgets/status_widget.dart';
 import '../../domain/entities/trip.dart';
 
 class SelectSeatScreen extends StatefulWidget {
-    static const routeName = '/select-seat';
+  static const routeName = '/select-seat';
   const SelectSeatScreen({Key? key}) : super(key: key);
 
   @override
@@ -32,6 +34,13 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
       initTrip = arguments as Trip;
     }
     super.didChangeDependencies();
+
+    BookingCubit bookingCubit = context.read<BookingCubit>();
+    print(
+        "All trip in seat select screen : ${bookingCubit.state.selectedTrip.allTripSeats}");
+    bookingCubit
+        .fetchAllTripSeats(bookingCubit.state.selectedTrip.allTripSeats);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   final List<String> facilitiesName = [
@@ -41,18 +50,12 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
     "Comfortable Seats",
     "Charging Port"
   ];
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-  }
 
   List images = ["change_password.svg", "login_image.svg", "googleicon.png"];
 
   @override
   Widget build(BuildContext context) {
     var subject;
-    print("InitTrip: ${initTrip.busId.name}");
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: customAppBar(title: initTrip.busId.name, context: context),
@@ -138,58 +141,61 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                         boxShadow: [
                           BoxShadow(
                             blurRadius: size(context).height * 0.08,
-                            color: Color.fromARGB(36, 206, 203, 203),
+                            color: const Color.fromARGB(36, 206, 203, 203),
                             spreadRadius: size(context).height * 0.03,
                           )
                         ]),
                     child: Column(
                       children: [
-                        Container(
-                          height: size(context).height * 0.05,
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    EdgeInsets.all(size(context).width * 0.01),
-                                child: StatusWidget(
-                                  label: "Available",
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                  fontsize: size(context).height * 0.0175,
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.all(size(context).width * 0.01),
-                                child: StatusWidget(
-                                  label: "Selected",
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontsize: size(context).height * 0.0175,
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.all(size(context).width * 0.01),
-                                child: StatusWidget(
-                                  label: "Booked",
-                                  color: Theme.of(context).colorScheme.error,
-                                  fontsize: size(context).height * 0.0175,
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.all(size(context).width * 0.01),
-                                child: StatusWidget(
-                                  label: "Hold",
-                                  color:
-                                      Theme.of(context).colorScheme.onTertiary,
-                                  fontsize: size(context).height * 0.0175,
-                                ),
-                              ),
-                            ],
+                        // Seat legend information
+                        const SeatLegendWidget(),
+                        // grid view
+                        Expanded(
+                          child: RefreshIndicator(
+                            onRefresh: () => context
+                                .read<BookingCubit>()
+                                .refreshSelectedTrip(context
+                                    .read<BookingCubit>()
+                                    .state
+                                    .selectedTrip
+                                    .id),
+                            child: BlocBuilder<BookingCubit, BookingState>(
+                              buildWhen: (previous, current) =>
+                                  current.selectedTrip != previous.selectedTrip,
+                              builder: (context, state) {
+                                print(
+                                    "Current selected trip ${state.selectedTrip}");
+                                return GridView.builder(
+                                  itemCount:
+                                      state.selectedTrip.allTripSeats.length,
+                                  padding: const EdgeInsets.all(10),
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 5,
+                                    childAspectRatio: 1.5,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                  ),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return state.selectedTrip
+                                                .allTripSeats[index] ==
+                                            null
+                                        ? Container()
+                                        : SeatWidget(
+                                            index: index,
+                                            onClicked: () {},
+                                            seat: state.selectedTrip
+                                                .allTripSeats[index],
+                                          );
+                                  },
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],
+                      // Seat map
                     )),
               ),
             ),
@@ -206,50 +212,111 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                     boxShadow: [
                       BoxShadow(
                         blurRadius: size(context).height * 0.08,
-                        color: Color.fromARGB(36, 206, 203, 203),
+                        color: const Color.fromARGB(36, 206, 203, 203),
                         spreadRadius: size(context).height * 0.03,
                       )
                     ]),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: size(context).height * 0.02,
-                          vertical: size(context).width * 0.02),
-                      child: Row(
-                        children: [
-                          Text(
-                            "Selected Seats:",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1!
-                                .copyWith(
-                                    fontSize: size(context).height * 0.0165),
-                          ),
-                          SizedBox(width: size(context).width * 0.33),
-                          Text(
-                            "Amount:",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1!
-                                .copyWith(
-                                    fontSize: size(context).height * 0.0165),
-                          )
-                        ],
+                child: BlocBuilder<BookingCubit, BookingState>(
+                    builder: (context, state) {
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: size(context).height * 0.02,
+                            vertical: size(context).width * 0.02),
+                        child: Row(
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  "Selected Seats:",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1!
+                                      .copyWith(
+                                          fontSize:
+                                              size(context).height * 0.0165),
+                                ),
+                                SizedBox(
+                                  height: size(context).height * 0.030,
+                                  width: size(context).width * 0.3,
+                                  child: GridView.builder(
+                                    itemCount: state.selectedSeatsByUser.isEmpty
+                                        ? 0
+                                        : state.selectedSeatsByUser.length,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 5,
+                                      crossAxisSpacing: 2,
+                                      mainAxisSpacing: 2,
+                                    ),
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return SizedBox(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(2),
+                                          child: Text(
+                                            "${state.selectedSeatsByUser[index].seat.label} ",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(width: size(context).width * 0.33),
+                            Column(
+                              children: [
+                                Text(
+                                  "Amount:",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1!
+                                      .copyWith(
+                                          fontSize:
+                                              size(context).height * 0.0165),
+                                ),
+                                SizedBox(
+                                  child: Text(
+                                    "NPR ${state.totalPrice.toString()}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: size(context).height * 0.02),
-                    CustomButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            ReservationScreen.routeName,
-                          );
-                        },
-                        label: "Buy Tickets",
-                        disable: false)
-                  ],
-                ),
+                      // SizedBox(height: size(context).height * 0.02),
+                      CustomButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              ReservationScreen.routeName,
+                            );
+                          },
+                          label: "Buy Tickets",
+                          disable: false)
+                    ],
+                  );
+                }),
               ),
             ),
             SizedBox(
@@ -361,7 +428,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                                 decoration: BoxDecoration(
                                     color: Colors.deepPurple,
                                     borderRadius: BorderRadius.circular(20),
-                                    image: DecorationImage(
+                                    image: const DecorationImage(
                                         image: NetworkImage(
                                             "https://www.eichertrucksandbuses.com/front/images/buses_img01.png"),
                                         fit: BoxFit.fill)),
@@ -422,3 +489,51 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
   }
 }
 
+class SeatLegendWidget extends StatelessWidget {
+  const SeatLegendWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: size(context).height * 0.05,
+      child: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(size(context).width * 0.01),
+            child: StatusWidget(
+              label: "Available",
+              color: Theme.of(context).colorScheme.secondary,
+              fontsize: size(context).height * 0.0175,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(size(context).width * 0.01),
+            child: StatusWidget(
+              label: "Selected",
+              color: Theme.of(context).colorScheme.primary,
+              fontsize: size(context).height * 0.0175,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(size(context).width * 0.01),
+            child: StatusWidget(
+              label: "Booked",
+              color: Theme.of(context).colorScheme.error,
+              fontsize: size(context).height * 0.0175,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(size(context).width * 0.01),
+            child: StatusWidget(
+              label: "Hold",
+              color: Theme.of(context).colorScheme.onTertiary,
+              fontsize: size(context).height * 0.0175,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -8,12 +8,16 @@ import '../models/station_model.dart';
 import '../models/trip_model.dart';
 
 abstract class TripRemoteDataSource {
-  Future<List<TripModel>> fetchAllTrips({
+  Future<List<dynamic>> fetchAllTrips({
     required String selectedFromStation,
     required String selectedtoStation,
     required DateTime selectedDate,
     required int seats,
   }) {
+    throw UnimplementedError();
+  }
+
+  Future<TripModel> fetchTripById({required String id}) {
     throw UnimplementedError();
   }
 
@@ -30,7 +34,7 @@ class TripRemoteDataSourceImpl implements TripRemoteDataSource {
   });
 
   @override
-  Future<List<TripModel>> fetchAllTrips({
+  Future<List<dynamic>> fetchAllTrips({
     required String selectedFromStation,
     required String selectedtoStation,
     required DateTime selectedDate,
@@ -48,13 +52,14 @@ class TripRemoteDataSourceImpl implements TripRemoteDataSource {
         var decodedResponse = ResponseModel.fromJson(response.body);
         var data = decodedResponse.data;
         var message = decodedResponse.message;
-        print("data: $data");
-        print("Message: $message");
-        List<TripModel> trips = [];
+
+        List<dynamic> trips = [];
         data.forEach((trip) {
+          print("Single trip in remote data source : $trip");
           trips.add(TripModel.fromMap(trip, message: decodedResponse.message));
         });
-        print("Trip $trips");
+
+        print("All trip in remote data source : ${data}");
         return trips;
       } else {
         throw ServerFailure.fromJson(json.decode(response.body));
@@ -89,6 +94,28 @@ class TripRemoteDataSourceImpl implements TripRemoteDataSource {
         throw ServerFailure.fromJson(json.decode(response.body));
       }
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<TripModel> fetchTripById({required String id}) async {
+    var tripUrl = '$serverUrl/trip/byId';
+    print('i was called here');
+    try {
+      final response = await client.post(Uri.parse(tripUrl), body: {
+        '_id': id,
+      });
+      if (response.statusCode == 200) {
+        var decodedResponse = ResponseModel.fromJson(response.body);
+
+        return TripModel.fromMap(decodedResponse.data,
+            message: decodedResponse.message);
+      } else {
+        throw ServerFailure.fromJson(json.decode(response.body));
+      }
+    } catch (e) {
+      print("ERR ::" + e.toString());
       rethrow;
     }
   }

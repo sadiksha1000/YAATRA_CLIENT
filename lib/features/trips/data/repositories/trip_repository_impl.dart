@@ -23,7 +23,7 @@ class TripRepositoryImpl implements TripRepository {
   var currentStation = Station.empty;
 
   @override
-  Future<Either<Failure, List<TripModel>>> fetchAllTrips({
+  Future<Either<Failure, List<dynamic>>> fetchAllTrips({
     required String selectedFromStation,
     required String selectedtoStation,
     required DateTime selectedDate,
@@ -51,6 +51,20 @@ class TripRepositoryImpl implements TripRepository {
     if (await networkInfo.isConnected) {
       try {
         final stationDetails = await remoteDataSource.fetchAllStations();
+        return Right(stationDetails);
+      } on ServerFailure catch (e) {
+        return Left(e);
+      }
+    } else {
+      return Left(CacheFailure(properties: []));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, Trip>> fetchTripById({required String id})async {
+    if (await networkInfo.isConnected) {
+      try {
+        final stationDetails = await remoteDataSource.fetchTripById(id: id);
         return Right(stationDetails);
       } on ServerFailure catch (e) {
         return Left(e);
