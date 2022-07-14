@@ -16,6 +16,7 @@ import 'package:yaatra_client/features/authentication/domain/usecases/register_u
 import 'package:yaatra_client/features/authentication/domain/usecases/send_otp_to_phone_usecase.dart';
 import 'package:yaatra_client/features/authentication/domain/usecases/switch_user_role_usecase.dart';
 import 'package:yaatra_client/features/authentication/presentation/blocs/cubit/auth_cubit.dart';
+import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_cubit.dart';
 import 'package:yaatra_client/features/passenger/profile/data/datasources/passenger_profile_remote_datasourse.dart';
 import 'package:yaatra_client/features/passenger/profile/data/repositories/profile_repository_impl.dart';
 import 'package:yaatra_client/features/passenger/profile/domain/repositories/passenger_profile_repositories.dart';
@@ -31,6 +32,7 @@ import 'package:yaatra_client/features/passenger/applyasagent/data/datasources/a
 import 'package:yaatra_client/features/passenger/applyasagent/domain/repositories/apply_as_agent_repository.dart';
 import 'package:yaatra_client/features/passenger/applyasagent/domain/usecases/refresh_apply_as_agent_usecase.dart';
 import 'package:yaatra_client/features/ticket/fetch_ticket/domain/usecases/fetch_bookings_usecase.dart';
+import 'package:yaatra_client/features/trips/domain/usecases/fetch_trip_byid_usecase.dart';
 
 import 'features/authentication/data/repositories/user_repository_impl.dart';
 import 'features/authentication/domain/repositories/user_repository.dart';
@@ -86,8 +88,6 @@ void main() async {
     PassengerProfileRemoteDataSource passengerProfileRemoteDataSource =
         PassengerProfileRemoteDataSourceImpl(client: client);
 
-    
-
     // repositories
     UserRepository userRepository = UserRepositoryImpl(
       remoteDataSource: userRemoteDataSource,
@@ -131,6 +131,8 @@ void main() async {
     FetchAllStationsUseCase fetchAllStationsUseCase =
         FetchAllStationsUseCase(busRepository);
     FetchTripsUseCase fetchTripUseCase = FetchTripsUseCase(tripRepository);
+    FetchTripByIdUseCase fetchTripByIdUseCase =
+        FetchTripByIdUseCase(tripRepository);
     FetchBookingsUseCase fetchBookingsUseCase =
         FetchBookingsUseCase(fetchTicketRepository);
     RefreshCurrentUserUseCase refreshCurrentUserUseCase =
@@ -193,6 +195,10 @@ void main() async {
         getCurrentPassenger: currentPassengerUsecase,
         createProfileUseCase: createProfileUseCase);
 
+    BookingCubit bookingCubit = BookingCubit(
+      fetchTripById: fetchTripByIdUseCase,
+    );
+
     runApp(MyApp(
       registerCubit: registerCubit,
       appBloc: appBloc,
@@ -205,6 +211,7 @@ void main() async {
       applyAsAgentCubit: applyAsAgentCubit,
       imageCubit: imageCubit,
       passengerProfileCubit: passengerProfileCubit,
+      bookingCubit: bookingCubit,
     ));
   }, storage: storage);
 }
@@ -221,6 +228,7 @@ class MyApp extends StatelessWidget {
   ApplyAsAgentCubit applyAsAgentCubit;
   ImageCubit imageCubit;
   PassengerProfileCubit passengerProfileCubit;
+  BookingCubit bookingCubit;
   MyApp(
       {Key? key,
       required this.registerCubit,
@@ -233,7 +241,8 @@ class MyApp extends StatelessWidget {
       required this.fetchTicketCubit,
       required this.applyAsAgentCubit,
       required this.imageCubit,
-      required this.passengerProfileCubit})
+      required this.passengerProfileCubit,
+      required this.bookingCubit})
       : super(key: key);
 
   @override
@@ -269,7 +278,10 @@ class MyApp extends StatelessWidget {
         create: (context) => imageCubit,
       ),
       BlocProvider<PassengerProfileCubit>(
-          create: (context) => passengerProfileCubit)
+          create: (context) => passengerProfileCubit),
+      BlocProvider<BookingCubit>(
+        create: (context) => bookingCubit,
+      ),
     ], child: const AppView());
   }
 }

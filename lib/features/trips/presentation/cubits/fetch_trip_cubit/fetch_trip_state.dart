@@ -5,7 +5,7 @@ class FetchTripState extends Equatable {
   final StationModel selectedToStation;
   final String errorMessage;
   final String successMessage;
-  final List<TripModel> trip;
+  final List<dynamic> trip;
   // final Status status;
 
   FetchTripState({
@@ -43,7 +43,7 @@ class FetchTripState extends Equatable {
     StationModel? selectedToStation,
     String? errorMessage,
     String? successMessage,
-    List<TripModel>? trip,
+    List<dynamic>? trip,
     // Status? status,
   }) {
     return FetchTripState(
@@ -75,7 +75,7 @@ class FetchTripState extends Equatable {
           StationModel.fromMap(map['selectedToStation'], message: ''),
       errorMessage: map['errorMessage'],
       successMessage: map['successMessage'],
-      trip: TripModel.fromMap(map['trip'], message: '') as List<TripModel>,
+      trip: TripModel.fromMap(map['trip'], message: '') as List<dynamic>,
       // status: Status.values[map['status']],
     );
   }

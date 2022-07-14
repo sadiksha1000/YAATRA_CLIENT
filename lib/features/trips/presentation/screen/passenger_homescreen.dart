@@ -1,16 +1,13 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/config/size.dart';
 import '../../../../core/widgets/custom_appbar.dart';
 import '../../../../core/widgets/custom_button_widget.dart';
-import '../../../../core/widgets/custom_chip.dart';
 import '../../../../core/widgets/custom_intro_header.dart';
 
-import 'package:dotted_line/dotted_line.dart';
 import '../../data/models/station_model.dart';
 import '../../domain/entities/station.dart';
 import '../../../bus/presentation/cubits/fetch_bus_cubit/fetch_buses_cubit.dart';

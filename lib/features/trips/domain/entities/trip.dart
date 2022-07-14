@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:yaatra_client/features/trips/domain/entities/routes.dart';
-import '../../../ticket/fetch_ticket/domain/entities/booking.dart';
-import 'conductor.dart';
-import 'customroute.dart';
+import 'package:yaatra_client/features/trips/domain/entities/trip_seat.dart';
 
 import '../../../bus/domain/entities/bus.dart';
 
@@ -15,6 +13,7 @@ class Trip extends Equatable {
   final DateTime tripStartDate;
   final DateTime tripEndDate;
   // final Booking booking;
+  final List<dynamic> allTripSeats;
   final String message;
 
   Trip({
@@ -26,6 +25,7 @@ class Trip extends Equatable {
     required this.tripStartDate,
     required this.tripEndDate,
     required this.message,
+    required this.allTripSeats,
   });
 
   static final empty = Trip(
@@ -36,6 +36,7 @@ class Trip extends Equatable {
     arrivalTime: DateTime.now(),
     tripStartDate: DateTime.now(),
     tripEndDate: DateTime.now(),
+    allTripSeats: [],
     // booking: Booking.empty,
     message: '',
   );
@@ -51,6 +52,9 @@ class Trip extends Equatable {
       tripEndDate: DateTime.tryParse(map['tripEndDate']) ?? DateTime.now(),
       // booking: Booking.fromMap(map['booking']),
       message: map['message'] ?? '',
+      allTripSeats: (map['seats'] as List<dynamic>)
+          .map((e) => TripSeat.fromMap(e))
+          .toList(),
     );
   }
 
@@ -64,6 +68,7 @@ class Trip extends Equatable {
       'tripStartDate': tripStartDate,
       'tripEndDate': tripEndDate,
       // 'booking': booking.toMap(),
+      'seats': allTripSeats.map((e) => e.toMap()).toList(),
     };
   }
 
@@ -77,5 +82,6 @@ class Trip extends Equatable {
         tripStartDate,
         tripEndDate,
         // booking,
+        allTripSeats,
       ];
 }
