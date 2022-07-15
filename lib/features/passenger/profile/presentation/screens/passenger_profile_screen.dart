@@ -89,22 +89,6 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    final arguments = ModalRoute.of(context)?.settings.arguments;
-    if (arguments != null && isInit) {
-      isInit = false;
-      initProfile = arguments as PassengerProfile;
-      PassengerProfileCubit _passengerProfileCubit =
-          BlocProvider.of<PassengerProfileCubit>(context);
-      _passengerProfileCubit.createdname(initProfile.name);
-      _passengerProfileCubit.createdphone(initProfile.phone);
-      _passengerProfileCubit.createdaddress(initProfile.address);
-      // _passengerProfileCubit.createprofileUrl(initProfile.profileUrl);
-    }
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     PassengerProfileCubit _passengerProfileCubit =
         BlocProvider.of<PassengerProfileCubit>(context);
