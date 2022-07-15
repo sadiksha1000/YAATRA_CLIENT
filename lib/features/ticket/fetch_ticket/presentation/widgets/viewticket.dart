@@ -23,12 +23,12 @@ class ViewTicket extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-              "${_booking.tripId.departureRoute.source.placeId.name} to ${_booking.tripId.departureRoute.destination.placeId.name}",
-              style: Theme.of(context)
-                  .textTheme
-                  .headline4!
-                  .copyWith(color: Theme.of(context).colorScheme.primary)),
+          // Text(
+          //     "${_booking.tripId.departureRoute.source.placeId.name} to ${_booking.tripId.departureRoute.destination.placeId.name}",
+          //     style: Theme.of(context)
+          //         .textTheme
+          //         .headline4!
+          //         .copyWith(color: Theme.of(context).colorScheme.primary)),
           SizedBox(height: size(context).height * 0.005),
           Row(
             children: [
@@ -41,6 +41,7 @@ class ViewTicket extends StatelessWidget {
                       image: NetworkImage(
                           "https://images.unsplash.com/photo-1579202673506-ca3ce28943ef"),
                       fit: BoxFit.cover),
+                      
                 ),
               ),
               Expanded(
@@ -50,12 +51,12 @@ class ViewTicket extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        _booking.tripId.busId.name,
-                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                            color: Colors.black,
-                            fontSize: size(context).height * 0.02),
-                      ),
+                      // Text(
+                      //   _booking.tripId.busId.name,
+                      //   style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                      //       color: Colors.black,
+                      //       fontSize: size(context).height * 0.02),
+                      // ),
                       Row(
                         children: [
                           Text(
@@ -83,15 +84,15 @@ class ViewTicket extends StatelessWidget {
                                 fontSize: size(context).height * 0.016,
                                 fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            _booking.tripId.tripStartDate
-                                .toIso8601String()
-                                .split('T')[0],
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontSize: size(context).height * 0.015,
-                                fontWeight: FontWeight.bold),
-                          ),
+                          // Text(
+                          //   _booking.tripId.tripStartDate
+                          //       .toIso8601String()
+                          //       .split('T')[0],
+                          //   style: TextStyle(
+                          //       color: Theme.of(context).colorScheme.primary,
+                          //       fontSize: size(context).height * 0.015,
+                          //       fontWeight: FontWeight.bold),
+                          // ),
                         ],
                       ),
                     ],

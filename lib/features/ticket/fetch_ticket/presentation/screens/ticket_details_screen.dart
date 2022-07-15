@@ -61,10 +61,10 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
                                     fontWeight: FontWeight.bold,
                                   ),
                         ),
-                        Text(
-                          initBooking.tripId.departureRoute.source.placeId.name,
-                          style: Theme.of(context).textTheme.subtitle1,
-                        ),
+                        // Text(
+                        //   initBooking.tripId.departureRoute.source.placeId.name,
+                        //   style: Theme.of(context).textTheme.subtitle1,
+                        // ),
                       ],
                     ),
                     Column(
@@ -77,11 +77,11 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
                                     fontWeight: FontWeight.bold,
                                   ),
                         ),
-                        Text(
-                          initBooking
-                              .tripId.departureRoute.destination.placeId.name,
-                          style: Theme.of(context).textTheme.subtitle1,
-                        )
+                        // Text(
+                        //   initBooking
+                        //       .tripId.departureRoute.destination.placeId.name,
+                        //   style: Theme.of(context).textTheme.subtitle1,
+                        // )
                       ],
                     ),
                   ],
@@ -93,27 +93,27 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          initBooking.tripId.busId.name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1!
-                              .copyWith(color: Colors.black),
-                        ),
+                        // Text(
+                        //   initBooking.tripId.busId.name,
+                        //   style: Theme.of(context)
+                        //       .textTheme
+                        //       .subtitle1!
+                        //       .copyWith(color: Colors.black),
+                        // ),
                         const TextLabelWidget(
                           label: 'Time',
                           value: '12:00 PM',
                         ),
-                        TextLabelWidget(
-                          label: 'Date:',
-                          value: initBooking.tripId.tripStartDate
-                              .toString()
-                              .split(' ')[0],
-                        ),
-                        TextLabelWidget(
-                          label: "Bus No:",
-                          value: initBooking.tripId.busId.plateNumber,
-                        ),
+                        // TextLabelWidget(
+                        //   label: 'Date:',
+                        //   value: initBooking.tripId.tripStartDate
+                        //       .toString()
+                        //       .split(' ')[0],
+                        // ),
+                        // TextLabelWidget(
+                        //   label: "Bus No:",
+                        //   value: initBooking.tripId.busId.plateNumber,
+                        // ),
                         TextLabelWidget(
                           label: "Ticket No:",
                           value: initBooking.id,
@@ -169,12 +169,12 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
                                 ),
                               ),
                             ),
-                            Center(
-                                child: Text(
-                              "${initBooking.tripId.busId.name} - ${initBooking.tripId.busId.plateNumber}",
-                              style: TextStyle(
-                                  fontSize: size(context).height * 0.02),
-                            )),
+                            // Center(
+                            //     child: Text(
+                            //   "${initBooking.tripId.busId.name} - ${initBooking.tripId.busId.plateNumber}",
+                            //   style: TextStyle(
+                            //       fontSize: size(context).height * 0.02),
+                            // )),
                             Padding(
                               padding:
                                   EdgeInsets.all(size(context).height * 0.01),

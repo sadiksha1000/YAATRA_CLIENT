@@ -55,12 +55,12 @@ class PastTrips extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      _booking.tripId.busId.name,
-                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                          color: Colors.black,
-                          fontSize: size(context).height * 0.021),
-                    ),
+                    // Text(
+                    //   _booking.tripId.busId.name,
+                    //   style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                    //       color: Colors.black,
+                    //       fontSize: size(context).height * 0.021),
+                    // ),
                     Row(
                       children: [
                         Text(
@@ -88,15 +88,15 @@ class PastTrips extends StatelessWidget {
                               .titleSmall!
                               .copyWith(fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          _booking.tripId.tripStartDate
-                              .toIso8601String()
-                              .split('T')[0],
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontSize: size(context).height * 0.016,
-                          ),
-                        ),
+                        // Text(
+                        //   _booking.tripId.tripStartDate
+                        //       .toIso8601String()
+                        //       .split('T')[0],
+                        //   style: TextStyle(
+                        //     color: Theme.of(context).colorScheme.primary,
+                        //     fontSize: size(context).height * 0.016,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ],
