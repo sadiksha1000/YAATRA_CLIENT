@@ -85,6 +85,10 @@ class BookingCubit extends Cubit<BookingState> {
         totalPrice: state.totalPrice + seat.seat.ticketPrice));
   }
 
+  void emptySelectedSeatAndPriceByUser() {
+    emit(state.copyWith(selectedSeatsByUser: [], totalPrice: 0));
+  }
+
   void removeSelectedSeatByUser(TripSeat seat) {
     emit(
       state.copyWith(
