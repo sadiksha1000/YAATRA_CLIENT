@@ -2,7 +2,6 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_cubit.dart';
-import 'package:yaatra_client/features/trips/presentation/cubits/fetch_trip_cubit/fetch_trip_cubit.dart';
 import 'package:yaatra_client/features/trips/presentation/widgets/seat_widget.dart';
 import 'reservation_screen.dart';
 
@@ -25,6 +24,12 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
     with TickerProviderStateMixin {
   Trip initTrip = Trip.empty;
   late TabController _tabController;
+
+  @override
+  void initState() {
+    context.read<BookingCubit>().emptySelectedSeatAndPriceByUser();
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -163,8 +168,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                               buildWhen: (previous, current) =>
                                   current.selectedTrip != previous.selectedTrip,
                               builder: (context, state) {
-                                print(
-                                    "Current selected trip ${state.selectedTrip}");
+                              
                                 return GridView.builder(
                                   itemCount:
                                       state.selectedTrip.allTripSeats.length,
