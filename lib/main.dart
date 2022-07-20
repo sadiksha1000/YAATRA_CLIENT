@@ -20,6 +20,7 @@ import 'package:yaatra_client/features/authentication/presentation/blocs/cubit/a
 import 'package:yaatra_client/features/passenger/booking/data/datasources/booking_remote_datasource.dart';
 import 'package:yaatra_client/features/passenger/booking/domain/repositories/booking_repository.dart';
 import 'package:yaatra_client/features/passenger/booking/domain/usecases/check_seat_availability_usecase.dart';
+import 'package:yaatra_client/features/passenger/booking/domain/usecases/create_booking_usecase.dart';
 import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_cubit.dart';
 import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_session_cubit.dart';
 import 'package:yaatra_client/features/passenger/profile/data/datasources/passenger_profile_remote_datasourse.dart';
@@ -147,6 +148,8 @@ void main() async {
     FetchTripsUseCase fetchTripUseCase = FetchTripsUseCase(tripRepository);
     FetchTripByIdUseCase fetchTripByIdUseCase =
         FetchTripByIdUseCase(tripRepository);
+    CreateBookingUseCase createBookingUseCase =
+        CreateBookingUseCase(bookingRepository);
     FetchBookingsUseCase fetchBookingsUseCase =
         FetchBookingsUseCase(fetchTicketRepository);
     RefreshCurrentUserUseCase refreshCurrentUserUseCase =
@@ -214,6 +217,7 @@ void main() async {
 
     BookingCubit bookingCubit = BookingCubit(
       fetchTripById: fetchTripByIdUseCase,
+      createBooking: createBookingUseCase,
     );
 
     BookingSessionCubit bookingSessionCubit = BookingSessionCubit(

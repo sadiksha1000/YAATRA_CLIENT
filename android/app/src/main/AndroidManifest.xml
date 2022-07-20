@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.yaatra_client">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="yaatra_client"
         android:name="${applicationName}"

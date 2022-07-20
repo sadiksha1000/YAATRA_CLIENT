@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:yaatra_client/core/widgets/custom_snackbar.dart';
 import 'package:yaatra_client/features/passenger/booking/data/models/passenger_details.dart';
+import 'package:yaatra_client/features/passenger/booking/domain/usecases/create_booking_usecase.dart';
 import 'package:yaatra_client/features/trips/domain/entities/trip_seat.dart';
 
 import '../../../../../core/utils/status.dart';
@@ -15,8 +16,12 @@ part 'booking_state.dart';
 
 class BookingCubit extends Cubit<BookingState> {
   FetchTripByIdUseCase fetchTripByIdUseCase;
-  BookingCubit({required FetchTripByIdUseCase fetchTripById})
+  CreateBookingUseCase createBookingUseCase;
+  BookingCubit(
+      {required FetchTripByIdUseCase fetchTripById,
+      required CreateBookingUseCase createBooking})
       : fetchTripByIdUseCase = fetchTripById,
+        createBookingUseCase = createBooking,
         super(BookingState.initial());
 
   List<TripSeat> allTripSeats = const [
@@ -114,7 +119,10 @@ class BookingCubit extends Cubit<BookingState> {
     );
   }
 
-  void payWithKhalti(BuildContext context) {
+  void payWithKhalti(
+      {required BuildContext context,
+      required String userId,
+      required String bookingSessionId}) async {
     var passengersDetails = state.passengerDetails.map((element) {
       return {
         'name': element.name,
@@ -128,10 +136,7 @@ class BookingCubit extends Cubit<BookingState> {
       'phone': state.contactPersonDetails.contact,
     };
 
-    var bookingSessionDetails = {'_id': ""};
-
-    print(passengersDetails);
-    print(contactDetails);
+    var tripId = state.selectedTrip.id;
 
     final config = PaymentConfig(
       amount: state.totalPrice * 100, // Amount should be in paisa
@@ -172,11 +177,43 @@ class BookingCubit extends Cubit<BookingState> {
             isError: true,
             message: 'Your payment was failed');
       },
-      onCancel: () {
-        customSnackbar(
-            context: context,
-            isError: true,
-            message: 'Your payment was cancelled');
+      onCancel: () async {
+        ///
+        /// nameOfPassenger
+        /// phoneOfPassenger
+        /// tripSeatIdOfPassenger
+        /// create bookedSeats for all passengers
+        /// totalAmountOfBooking
+        /// contactPersonName
+        /// contactPersonPhone
+        /// contactPersonEmail
+        /// userId
+        /// tripId
+        /// Create booking for that event
+        /// push this booking to trip
+        ///
+        var bookingEither = await createBookingUseCase(
+          bookingSessionId: bookingSessionId,
+          userId: userId,
+          tripId: tripId,
+          contactDetails: contactDetails,
+          passengersDetails: passengersDetails,
+          totalAmount: state.totalPrice,
+        );
+        bookingEither.fold((failure) {
+          customSnackbar(
+              context: context,
+              isError: true,
+              message: 'Your payment was failed');
+        }, (booking) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          customSnackbar(
+              context: context, isError: false, message: 'Payment Successful');
+        });
+        // customSnackbar(
+        //     context: context,
+        //     isError: true,
+        //     message: 'Your payment was cancelled');
       },
     );
   }
