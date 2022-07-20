@@ -5,7 +5,9 @@ class BookingState extends Equatable {
   final List<dynamic> allTripSeats;
   final Trip selectedTrip;
   final List<TripSeat> selectedSeatsByUser;
+  final List<PassengerDetailsModel> passengerDetails;
   final int totalPrice;
+  final PassengerDetailsModel contactPersonDetails;
 
   const BookingState({
     required this.allTripSeats,
@@ -13,6 +15,8 @@ class BookingState extends Equatable {
     required this.refreshSelectedTripStatus,
     required this.selectedSeatsByUser,
     required this.totalPrice,
+    required this.passengerDetails,
+    required this.contactPersonDetails,
   });
 
   @override
@@ -21,7 +25,9 @@ class BookingState extends Equatable {
         selectedTrip,
         refreshSelectedTripStatus,
         selectedSeatsByUser,
-        totalPrice
+        totalPrice,
+        passengerDetails,
+        contactPersonDetails,
       ];
 
   factory BookingState.initial() {
@@ -31,6 +37,8 @@ class BookingState extends Equatable {
       refreshSelectedTripStatus: Status.initial,
       selectedSeatsByUser: [],
       totalPrice: 0,
+      passengerDetails: [],
+      contactPersonDetails: PassengerDetailsModel.empty,
     );
   }
 
@@ -40,6 +48,8 @@ class BookingState extends Equatable {
     Status? refreshSelectedTripStatus,
     List<TripSeat>? selectedSeatsByUser,
     int? totalPrice,
+    List<PassengerDetailsModel>? passengerDetails,
+    PassengerDetailsModel? contactPersonDetails,
   }) {
     return BookingState(
       allTripSeats: allTripSeats ?? this.allTripSeats,
@@ -48,6 +58,8 @@ class BookingState extends Equatable {
           refreshSelectedTripStatus ?? this.refreshSelectedTripStatus,
       selectedSeatsByUser: selectedSeatsByUser ?? this.selectedSeatsByUser,
       totalPrice: totalPrice ?? this.totalPrice,
+      passengerDetails: passengerDetails ?? this.passengerDetails,
+      contactPersonDetails: contactPersonDetails ?? this.contactPersonDetails,
     );
   }
 }

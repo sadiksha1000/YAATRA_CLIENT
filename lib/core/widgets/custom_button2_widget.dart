@@ -34,9 +34,10 @@ class _SecondaryCustomButtonState extends State<SecondaryCustomButton> {
         // onPrimary: widget.onPrimary1,
         primary: widget.color,
         elevation: 0,
-        padding: EdgeInsets.symmetric(
-          horizontal: size(context).width * 0.3,
-        ),
+        padding: widget.padding1 ??
+            EdgeInsets.symmetric(
+              horizontal: size(context).width * 0.3,
+            ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
             size(context).height * 0.01,

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:yaatra_client/core/config/constants.dart';
+import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_cubit.dart';
+import 'package:yaatra_client/features/trips/presentation/screen/reservation_screen.dart';
 import '../../../../core/widgets/custom_appbar.dart';
 
 import '../../../../core/config/size.dart';
@@ -15,39 +20,49 @@ class ProceedToPay extends StatefulWidget {
 
 class _ProceedToPayState extends State<ProceedToPay> {
   // bool value = false;
-  int _val = 1;
+  int _val = 0;
   @override
   Widget build(BuildContext context) {
+    BookingCubit bookingCubit = context.read<BookingCubit>();
     return Scaffold(
-      appBar: customAppBar(title: "Proceed To Pay", context: context),
+      appBar:
+          customAppBar(title: "Confirm Reservation and Pay", context: context),
       body: Padding(
         padding: EdgeInsets.all(size(context).height * 0.02),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: size(context).height * 0.2,
-                // width: double.infinity,
+              SizedBox(
                 child: Row(
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Review Ticket",
-                            style: Theme.of(context).textTheme.headline4),
-                        Text("Swiss Travel",
-                            style: Theme.of(context).textTheme.subtitle1),
-                        const TextLabelWidget(
-                            label: "Time:", value: "12:00 AM"),
-                        const TextLabelWidget(
-                            label: "Date:", value: "12/12/2022"),
-                        const TextLabelWidget(
-                            label: "Bus No: ", value: "Ba 4 pa 2343"),
-                        const TextLabelWidget(
-                            label: "Ticket No:", value: "Ba 4 pa 2343"),
-                        const TextLabelWidget(
-                            label: "Pickup location:", value: "Koteshwor")
+                        Text(bookingCubit.state.selectedTrip.busId.name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1!
+                                .copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                        TextLabelWidget(
+                            label: "Time:",
+                            value: DateFormat.Hms().format(
+                                bookingCubit.state.selectedTrip.departureTime)),
+                        TextLabelWidget(
+                            label: "Date:",
+                            value: DateFormat.yMd().format(
+                                bookingCubit.state.selectedTrip.departureTime)),
+                        TextLabelWidget(
+                            label: "Bus No: ",
+                            value: bookingCubit
+                                .state.selectedTrip.busId.plateNumber),
+                        TextLabelWidget(
+                            label: "Total Price:",
+                            value:
+                                "${Constants.currency()} ${bookingCubit.state.totalPrice.toString()}")
                       ],
                     ),
                     SizedBox(
@@ -79,56 +94,50 @@ class _ProceedToPayState extends State<ProceedToPay> {
               SizedBox(
                 height: size(context).height * 0.01,
               ),
-              Text("Passenger Information",
+              Text("Passenger and Seat Information",
                   style: Theme.of(context).textTheme.headline5),
               SizedBox(
                 height: size(context).height * 0.02,
               ),
               Container(
-                height: size(context).height * 0.15,
-                decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(size(context).width * 0.04),
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: size(context).height * 0.08,
-                        color: const Color.fromRGBO(129, 124, 124, 0.15),
-                        spreadRadius: size(context).height * 0.03,
-                      )
-                    ]),
-                child: Padding(
-                  padding: EdgeInsets.all(size(context).height * 0.02),
-                  child: ListView.builder(
-                      itemCount: 2,
-                      itemBuilder: (BuildContext context, index) {
-                        return Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  "Seat A1:  ",
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                ),
-                                Text(
-                                  "Riya Ranjit",
-                                  style: Theme.of(context).textTheme.subtitle2,
-                                ),
-                                SizedBox(width: size(context).width * 0.02),
-                                Text(
-                                  "98376457772",
-                                  style: Theme.of(context).textTheme.subtitle2,
-                                )
-                              ],
-                            )
-                          ],
+                // height: size(context).height * 0.6,
+                padding: EdgeInsets.symmetric(
+                    horizontal: size(context).width * 0.05),
+                child: BlocBuilder<BookingCubit, BookingState>(
+                  builder: (context, state) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: state.selectedSeatsByUser.length,
+                      itemBuilder: ((context, index) {
+                        return PassengerViewDetailsWidget(
+                          seat: state.selectedSeatsByUser[index],
+                          passenger: state.passengerDetails[index],
                         );
                       }),
+                    );
+                  },
+                ),
+              ),
+              Text("Contact Details",
+                  style: Theme.of(context).textTheme.headline5),
+              SizedBox(
+                height: size(context).height * 0.02,
+              ),
+              Container(
+                // height: size(context).height * 0.6,
+                padding: EdgeInsets.symmetric(
+                    horizontal: size(context).width * 0.05),
+                child: BlocBuilder<BookingCubit, BookingState>(
+                  builder: (context, state) {
+                    return ContactViewDetailsWidget(
+                      passenger: state.contactPersonDetails,
+                    );
+                  },
                 ),
               ),
               SizedBox(height: size(context).height * 0.02),
               Text("Pay with", style: Theme.of(context).textTheme.headline4),
-              Container(
+              SizedBox(
                   height: size(context).height * 0.2,
                   child: Row(
                     children: [
@@ -138,7 +147,6 @@ class _ProceedToPayState extends State<ProceedToPay> {
                               value: 1,
                               groupValue: _val,
                               onChanged: (value) {
-                                print(value);
                                 setState(() {
                                   _val = value as int;
                                 });
@@ -161,7 +169,6 @@ class _ProceedToPayState extends State<ProceedToPay> {
                               fillColor: MaterialStateColor.resolveWith(
                                   (states) => Colors.green),
                               onChanged: (value) {
-                                print(value);
                                 setState(() {
                                   _val = value as int;
                                 });
@@ -182,10 +189,20 @@ class _ProceedToPayState extends State<ProceedToPay> {
               Center(
                   child: SecondaryCustomButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed(ProceedToPay.routeName);
+                        if (_val == 1) {
+                          // bookingCubit.payWithEsewa();
+                        } else if (_val == 2) {
+                          bookingCubit.payWithKhalti(context);
+                        }
+                        // Navigator.of(context).pushNamed(ProceedToPay.routeName);
                       },
-                      label: "Proceed",
-                      disable: false))
+                      padding1: EdgeInsets.symmetric(
+                        horizontal: size(context).width * 0.1,
+                      ),
+                      label: _val == 0
+                          ? "Select Payment Method"
+                          : "Pay ${Constants.currency()} ${bookingCubit.state.totalPrice.toString()} with ${_val == 1 ? "Esewa" : _val == 2 ? "Khalti" : "Select Payment Method"}",
+                      disable: _val == 0)),
             ],
           ),
         ),

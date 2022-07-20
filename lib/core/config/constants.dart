@@ -28,4 +28,5 @@ class Constants {
         color: Theme.of(context).colorScheme.onPrimary,
         boxShadow: cardBoxShadow(context),
       );
+  static currency() => "Rs.";
 }

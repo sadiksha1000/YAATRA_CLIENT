@@ -2,6 +2,7 @@ import 'package:data_connection_checker_nulls/data_connection_checker_nulls.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:yaatra_client/core/config/light_theme.dart';
@@ -16,7 +17,11 @@ import 'package:yaatra_client/features/authentication/domain/usecases/register_u
 import 'package:yaatra_client/features/authentication/domain/usecases/send_otp_to_phone_usecase.dart';
 import 'package:yaatra_client/features/authentication/domain/usecases/switch_user_role_usecase.dart';
 import 'package:yaatra_client/features/authentication/presentation/blocs/cubit/auth_cubit.dart';
+import 'package:yaatra_client/features/passenger/booking/data/datasources/booking_remote_datasource.dart';
+import 'package:yaatra_client/features/passenger/booking/domain/repositories/booking_repository.dart';
+import 'package:yaatra_client/features/passenger/booking/domain/usecases/check_seat_availability_usecase.dart';
 import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_cubit.dart';
+import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_session_cubit.dart';
 import 'package:yaatra_client/features/passenger/profile/data/datasources/passenger_profile_remote_datasourse.dart';
 import 'package:yaatra_client/features/passenger/profile/data/repositories/profile_repository_impl.dart';
 import 'package:yaatra_client/features/passenger/profile/domain/repositories/passenger_profile_repositories.dart';
@@ -43,6 +48,7 @@ import 'features/bus/presentation/cubits/fetch_bus_cubit/fetch_buses_cubit.dart'
 import 'features/passenger/applyasagent/data/repositories/apply_as_agent_repository_impl.dart';
 import 'features/passenger/applyasagent/domain/usecases/apply_as_agent_usecase.dart';
 import 'features/passenger/applyasagent/presentation/cubits/cubit/apply_as_agent_cubit.dart';
+import 'features/passenger/booking/data/repositories/booking_repository_impl.dart';
 import 'features/shared/image/data/datasources/upload_image_remote_datasource.dart';
 import 'features/shared/image/data/repositories/image_repository_impl.dart';
 import 'features/shared/image/domain/repositories/image_repository.dart';
@@ -87,6 +93,8 @@ void main() async {
         UploadImageRemoteDataSourceImpl(client: client);
     PassengerProfileRemoteDataSource passengerProfileRemoteDataSource =
         PassengerProfileRemoteDataSourceImpl(client: client);
+    BookingRemoteDataSource bookingRemoteDataSource =
+        BookingRemoteDataSourceImpl(client: client);
 
     // repositories
     UserRepository userRepository = UserRepositoryImpl(
@@ -119,6 +127,11 @@ void main() async {
             remoteDataSource: passengerProfileRemoteDataSource,
             networkInfo: networkInfo);
 
+    BookingRepository bookingRepository = BookingRepositoryImpl(
+      remoteDataSource: bookingRemoteDataSource,
+      networkInfo: networkInfo,
+    );
+
     // usecase
     RegisterUserUseCase registerUserUseCase = RegisterUserUseCase(
       userRepository: userRepository,
@@ -149,6 +162,9 @@ void main() async {
         GetCurrentPassengerUsecase(passengerProfileRepository);
     CreateProfileUseCase createProfileUseCase =
         CreateProfileUseCase(profileRepository: passengerProfileRepository);
+
+    CheckSeatAvailabilityUseCase checkSeatAvailabilityUsecase =
+        CheckSeatAvailabilityUseCase(bookingRepository);
 
     // cubits
     AuthCubit registerCubit = AuthCubit(
@@ -199,6 +215,10 @@ void main() async {
       fetchTripById: fetchTripByIdUseCase,
     );
 
+    BookingSessionCubit bookingSessionCubit = BookingSessionCubit(
+      checkSeatAvailability: checkSeatAvailabilityUsecase,
+    );
+
     runApp(MyApp(
       registerCubit: registerCubit,
       appBloc: appBloc,
@@ -212,6 +232,7 @@ void main() async {
       imageCubit: imageCubit,
       passengerProfileCubit: passengerProfileCubit,
       bookingCubit: bookingCubit,
+      bookingSessionCubit: bookingSessionCubit,
     ));
   }, storage: storage);
 }
@@ -229,21 +250,23 @@ class MyApp extends StatelessWidget {
   ImageCubit imageCubit;
   PassengerProfileCubit passengerProfileCubit;
   BookingCubit bookingCubit;
-  MyApp(
-      {Key? key,
-      required this.registerCubit,
-      required this.appBloc,
-      required this.userRepository,
-      required this.busCubit,
-      required this.stationCubit,
-      required this.searchBusCubit,
-      required this.fetchTripCubit,
-      required this.fetchTicketCubit,
-      required this.applyAsAgentCubit,
-      required this.imageCubit,
-      required this.passengerProfileCubit,
-      required this.bookingCubit})
-      : super(key: key);
+  BookingSessionCubit bookingSessionCubit;
+  MyApp({
+    Key? key,
+    required this.registerCubit,
+    required this.appBloc,
+    required this.userRepository,
+    required this.busCubit,
+    required this.stationCubit,
+    required this.searchBusCubit,
+    required this.fetchTripCubit,
+    required this.fetchTicketCubit,
+    required this.applyAsAgentCubit,
+    required this.imageCubit,
+    required this.passengerProfileCubit,
+    required this.bookingCubit,
+    required this.bookingSessionCubit,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -282,6 +305,9 @@ class MyApp extends StatelessWidget {
       BlocProvider<BookingCubit>(
         create: (context) => bookingCubit,
       ),
+      BlocProvider<BookingSessionCubit>(
+        create: (context) => bookingSessionCubit,
+      ),
     ], child: const AppView());
   }
 }
@@ -293,14 +319,25 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateRoute: RouteGenerator.generateRoute,
-      title: 'Yaatra Client',
-      debugShowCheckedModeBanner: false,
-      theme: lightTheme(),
-      // darkTheme: darkTheme(),
-      themeMode: ThemeMode.light,
-      home: LoginScreen(),
+    return KhaltiScope(
+      publicKey: 'test_public_key_14496a78b9384fffae61e3b8e969a4a8',
+      builder: ((context, navigatorKey) => MaterialApp(
+            navigatorKey: navigatorKey,
+            onGenerateRoute: RouteGenerator.generateRoute,
+            title: 'Yaatra Client',
+            debugShowCheckedModeBanner: false,
+            theme: lightTheme(),
+            // darkTheme: darkTheme(),
+            themeMode: ThemeMode.light,
+            supportedLocales: const <Locale>[
+              Locale('en', 'US'),
+              Locale('ne', 'NP'),
+            ],
+            localizationsDelegates: const [
+              KhaltiLocalizations.delegate,
+            ],
+            home: const LoginScreen(),
+          )),
     );
   }
 }
