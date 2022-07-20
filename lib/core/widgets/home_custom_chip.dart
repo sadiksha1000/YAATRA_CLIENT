@@ -26,9 +26,6 @@ class HomeCustomChipButton extends StatelessWidget {
         ),
         elevation: 2.0,
         shadowColor: Colors.black.withOpacity(0.25),
-        padding: EdgeInsets.symmetric(
-          horizontal: size(context).width * 0.02,
-        ),
         backgroundColor: Theme.of(context).colorScheme.tertiary,
       ),
     );

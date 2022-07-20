@@ -186,7 +186,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                                       const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 5,
                                     childAspectRatio: 1.5,
-                                    crossAxisSpacing: 10,
+                                    crossAxisSpacing: 0,
                                     mainAxisSpacing: 10,
                                   ),
                                   itemBuilder:
@@ -553,13 +553,14 @@ class SeatLegendWidget extends StatelessWidget {
     return SizedBox(
       height: size(context).height * 0.05,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
             padding: EdgeInsets.all(size(context).width * 0.01),
             child: StatusWidget(
               label: "Available",
               color: Theme.of(context).colorScheme.secondary,
-              fontsize: size(context).height * 0.0175,
+              fontsize: size(context).height * 0.015,
             ),
           ),
           Padding(
@@ -567,7 +568,7 @@ class SeatLegendWidget extends StatelessWidget {
             child: StatusWidget(
               label: "Selected",
               color: Theme.of(context).colorScheme.primary,
-              fontsize: size(context).height * 0.0175,
+              fontsize: size(context).height * 0.015,
             ),
           ),
           Padding(
@@ -575,7 +576,7 @@ class SeatLegendWidget extends StatelessWidget {
             child: StatusWidget(
               label: "Booked",
               color: Theme.of(context).colorScheme.error,
-              fontsize: size(context).height * 0.0175,
+              fontsize: size(context).height * 0.015,
             ),
           ),
           Padding(
@@ -583,7 +584,7 @@ class SeatLegendWidget extends StatelessWidget {
             child: StatusWidget(
               label: "Hold",
               color: Theme.of(context).colorScheme.onTertiary,
-              fontsize: size(context).height * 0.0175,
+              fontsize: size(context).height * 0.015,
             ),
           ),
         ],

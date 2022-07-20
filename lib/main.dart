@@ -39,6 +39,7 @@ import 'package:yaatra_client/features/passenger/applyasagent/domain/usecases/re
 import 'package:yaatra_client/features/ticket/fetch_ticket/domain/usecases/fetch_bookings_usecase.dart';
 import 'package:yaatra_client/features/trips/domain/usecases/fetch_trip_byid_usecase.dart';
 
+import 'core/config/dark_theme.dart';
 import 'features/authentication/data/repositories/user_repository_impl.dart';
 import 'features/authentication/domain/repositories/user_repository.dart';
 import 'features/authentication/domain/usecases/login_user_usecase.dart';
@@ -327,7 +328,7 @@ class AppView extends StatelessWidget {
             title: 'Yaatra Client',
             debugShowCheckedModeBanner: false,
             theme: lightTheme(),
-            // darkTheme: darkTheme(),
+            darkTheme: darkTheme(),
             themeMode: ThemeMode.light,
             supportedLocales: const <Locale>[
               Locale('en', 'US'),

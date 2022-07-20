@@ -2,6 +2,8 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yaatra_client/core/utils/status.dart';
+import 'package:yaatra_client/core/widgets/custom_progress_indicator.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/config/size.dart';
 import '../../../../core/widgets/custom_appbar.dart';
@@ -114,7 +116,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
 
     return Scaffold(
         appBar: customAppBar(
-          title: "",
+          title: "Yaatra",
           context: context,
           isBackButton: false,
           isDrawerEnabled: true,
@@ -131,16 +133,15 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
               Padding(
                 padding: EdgeInsets.all(size(context).height * 0.0165),
                 child: Container(
-                    height: size(context).height * 0.465,
+                    // height: size(context).height * 0.465,
                     decoration: Constants.cardDecoration(context),
-                    child: Stack(
-                      clipBehavior: Clip.none,
+                    child: Column(
                       children: [
                         Column(
                           children: [
                             SingleChildScrollView(
                               child: SizedBox(
-                                height: size(context).height * 0.165,
+                                // height: size(context).height * 0.165,
                                 child: Row(
                                   children: [
                                     Padding(
@@ -184,7 +185,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                                     Flexible(
                                       child: SizedBox(
                                         width: size(context).width * 0.55,
-                                        height: size(context).height * 0.3,
+                                        // height: size(context).height * 0.3,
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -291,7 +292,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                               ),
                             ),
                             SizedBox(
-                              height: size(context).height * 0.25,
+                              height: size(context).height * 0.27,
                               child: Row(
                                 children: [
                                   Padding(
@@ -342,12 +343,6 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                                               floatingLabelBehavior:
                                                   FloatingLabelBehavior.always,
                                               labelText: "Date",
-                                              // hintText:
-                                              //     '${selectedDate.year}/${selectedDate.month}/${selectedDate.day}',
-                                              // hintStyle: TextStyle(
-                                              //   fontSize: size(context).height *
-                                              //       0.016,
-                                              // ),
                                               labelStyle: TextStyle(
                                                 fontSize: size(context).height *
                                                     0.022,
@@ -446,25 +441,39 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                             ),
                           ],
                         ),
-                        Positioned(
-                          bottom: -26,
-                          left: 80,
-                          right: 80,
-                          child: StreamBuilder<bool>(
-                              stream: _fetchTripCubit.submitValid,
-                              builder: (context, snapshot) {
-                                return CustomButton(
-                                  onPressed: () async {
-                                    print('searched');
-                                    await _fetchTripCubit.searchBuses();
-                                    // _fetchBusCubit.fetchAllBuses();
-                                    Navigator.of(context)
-                                        .pushNamed(ViewBusesScreen.routeName);
-                                  },
-                                  label: "Search",
-                                  disable: false,
-                                );
-                              }),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: size(context).height * 0.02),
+                          child: SizedBox(
+                            child: StreamBuilder<bool>(
+                                stream: _fetchTripCubit.submitValid,
+                                builder: (context, snapshot) {
+                                  return BlocConsumer<FetchTripCubit,
+                                      FetchTripState>(
+                                    listener: (context, state) {
+                                      if (state.searchBusStatus ==
+                                          Status.success) {
+                                        Navigator.of(context).pushNamed(
+                                            ViewBusesScreen.routeName);
+                                      }
+                                    },
+                                    builder: (context, state) {
+                                      return state.searchBusStatus ==
+                                              Status.loading
+                                          ? CustomProgressIndicator(
+                                              onTap: () {})
+                                          : CustomButton(
+                                              onPressed: () async {
+                                                await _fetchTripCubit
+                                                    .searchBuses();
+                                              },
+                                              label: "Search",
+                                              disable: false,
+                                            );
+                                    },
+                                  );
+                                }),
+                          ),
                         )
                       ],
                     )),
@@ -638,7 +647,7 @@ class SourceDestinationInputWidget extends StatelessWidget {
             child: Text(
               selectedStation.isNotEmpty
                   ? "${selectedStation.stationName} (${selectedStation.placeId.name})"
-                  : '',
+                  : 'Select a station',
               style: Theme.of(context).textTheme.subtitle2!.copyWith(
                     fontSize: size(context).height * 0.018,
                   ),

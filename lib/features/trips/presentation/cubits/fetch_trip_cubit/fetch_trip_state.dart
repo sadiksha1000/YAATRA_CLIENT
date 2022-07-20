@@ -6,7 +6,7 @@ class FetchTripState extends Equatable {
   final String errorMessage;
   final String successMessage;
   final List<dynamic> trip;
-  // final Status status;
+  final Status searchBusStatus;
 
   FetchTripState({
     required this.selectedFromStation,
@@ -14,7 +14,7 @@ class FetchTripState extends Equatable {
     required this.errorMessage,
     required this.successMessage,
     required this.trip,
-    // required this.status,
+    required this.searchBusStatus,
   });
 
   @override
@@ -24,7 +24,7 @@ class FetchTripState extends Equatable {
         errorMessage,
         successMessage,
         trip,
-        // status
+        searchBusStatus,
       ];
 
   factory FetchTripState.initial() {
@@ -34,7 +34,7 @@ class FetchTripState extends Equatable {
       errorMessage: '',
       successMessage: '',
       trip: [],
-      // status: Status.initial,
+      searchBusStatus: Status.initial,
     );
   }
 
@@ -44,7 +44,7 @@ class FetchTripState extends Equatable {
     String? errorMessage,
     String? successMessage,
     List<dynamic>? trip,
-    // Status? status,
+    Status? searchBusStatus,
   }) {
     return FetchTripState(
       selectedFromStation: selectedFromStation ?? this.selectedFromStation,
@@ -52,7 +52,7 @@ class FetchTripState extends Equatable {
       errorMessage: errorMessage ?? this.errorMessage,
       successMessage: successMessage ?? this.successMessage,
       trip: trip ?? this.trip,
-      // status: status ?? this.status,
+      searchBusStatus: searchBusStatus ?? this.searchBusStatus,
     );
   }
 
@@ -63,7 +63,7 @@ class FetchTripState extends Equatable {
       'errorMessage': errorMessage,
       'successMessage': successMessage,
       'trip': trip,
-      // 'status': status.index,
+      'searchBusStatus': searchBusStatus.index,
     };
   }
 
@@ -76,7 +76,7 @@ class FetchTripState extends Equatable {
       errorMessage: map['errorMessage'],
       successMessage: map['successMessage'],
       trip: TripModel.fromMap(map['trip'], message: '') as List<dynamic>,
-      // status: Status.values[map['status']],
+      searchBusStatus: Status.values[map['searchBusStatus']],
     );
   }
 }

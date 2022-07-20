@@ -138,53 +138,51 @@ class _ProceedToPayState extends State<ProceedToPay> {
               SizedBox(height: size(context).height * 0.02),
               Text("Pay with", style: Theme.of(context).textTheme.headline4),
               SizedBox(
-                  height: size(context).height * 0.2,
                   child: Row(
-                    children: [
-                      Expanded(
-                        child: ListTile(
-                            leading: Radio(
-                              value: 1,
-                              groupValue: _val,
-                              onChanged: (value) {
-                                setState(() {
-                                  _val = value as int;
-                                });
-                              },
-                              activeColor:
-                                  Theme.of(context).colorScheme.primary,
-                              toggleable: true,
-                            ),
-                            title: const Image(
-                                height: 50,
-                                width: 80,
-                                image: NetworkImage(
-                                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSrdIN0L5Gy8rX7PxApTq0T-cL9qwS-tgRpvxhSet8cJYsJy1oEt1rti6Xx20ORHYb2_4&usqp=CAU'))),
-                      ),
-                      Expanded(
-                        child: ListTile(
-                            leading: Radio(
-                              value: 2,
-                              groupValue: _val,
-                              fillColor: MaterialStateColor.resolveWith(
-                                  (states) => Colors.green),
-                              onChanged: (value) {
-                                setState(() {
-                                  _val = value as int;
-                                });
-                              },
-                              toggleable: true,
-                            ),
-                            title: const Image(
-                                height: 50,
-                                width: 80,
-                                image: NetworkImage(
-                                    'https://upload.wikimedia.org/wikipedia/en/f/fd/Khalti_Digital_Wallet_Logo.png'))),
-                      ),
-                    ],
-                  )),
+                children: [
+                  Expanded(
+                    child: ListTile(
+                        leading: Radio(
+                          value: 1,
+                          groupValue: _val,
+                          onChanged: (value) {
+                            setState(() {
+                              _val = value as int;
+                            });
+                          },
+                          activeColor: Theme.of(context).colorScheme.primary,
+                          toggleable: true,
+                        ),
+                        title: const Image(
+                            height: 50,
+                            width: 80,
+                            image: NetworkImage(
+                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSrdIN0L5Gy8rX7PxApTq0T-cL9qwS-tgRpvxhSet8cJYsJy1oEt1rti6Xx20ORHYb2_4&usqp=CAU'))),
+                  ),
+                  Expanded(
+                    child: ListTile(
+                        leading: Radio(
+                          value: 2,
+                          groupValue: _val,
+                          fillColor: MaterialStateColor.resolveWith(
+                              (states) => Colors.green),
+                          onChanged: (value) {
+                            setState(() {
+                              _val = value as int;
+                            });
+                          },
+                          toggleable: true,
+                        ),
+                        title: const Image(
+                            height: 50,
+                            width: 80,
+                            image: NetworkImage(
+                                'https://upload.wikimedia.org/wikipedia/en/f/fd/Khalti_Digital_Wallet_Logo.png'))),
+                  ),
+                ],
+              )),
               SizedBox(
-                height: size(context).height * 0.05,
+                height: size(context).height * 0.02,
               ),
               Center(
                   child: SecondaryCustomButton(
