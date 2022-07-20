@@ -88,4 +88,8 @@ class FetchTripCubit extends Cubit<FetchTripState> with InputValidatorMixin {
       },
     );
   }
+
+  void cancelSearch() {
+    emit(state.copyWith(searchBusStatus: Status.initial));
+  }
 }

@@ -24,7 +24,7 @@ class HomeCustomChipButton extends StatelessWidget {
           label,
           style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
-        elevation: 2.0,
+        // elevation: 2.0,
         shadowColor: Colors.black.withOpacity(0.25),
         backgroundColor: Theme.of(context).colorScheme.tertiary,
       ),

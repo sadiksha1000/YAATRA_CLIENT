@@ -94,7 +94,6 @@ class _SeatWidgetState extends State<SeatWidget> {
   @override
   Widget build(BuildContext context) {
     BookingCubit _bookingCubit = BlocProvider.of<BookingCubit>(context);
-    print("I am rebuilding");
 
     return BlocConsumer<BookingCubit, BookingState>(
       listener: (context, state) {
