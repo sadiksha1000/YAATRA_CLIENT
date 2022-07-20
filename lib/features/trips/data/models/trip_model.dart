@@ -60,10 +60,10 @@ class TripModel extends Trip {
 
   static TripModel fromMap(Map<String, dynamic> map,
       {required String message}) {
-    print("This is map of trip seats ${map['seats']}");
-    print("This is map of departure time ${map['departureTime']}");
-    print("This is map of arival time${map['arrivalTime']}");
-    print("This is map of trip start date ${map['tripStartDate']}");
+    // print("This is map of trip seats ${map['seats']}");
+    // print("This is map of departure time ${map['departureTime']}");
+    // print("This is map of arival time${map['arrivalTime']}");
+    // print("This is map of trip start date ${map['tripStartDate']}");
     List<dynamic> seats = [];
     map['seats'].forEach((seat) {
       if (seat == null) {

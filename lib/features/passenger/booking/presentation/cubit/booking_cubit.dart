@@ -1,5 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:khalti_flutter/khalti_flutter.dart';
+import 'package:yaatra_client/core/widgets/custom_snackbar.dart';
+import 'package:yaatra_client/features/passenger/booking/data/models/passenger_details.dart';
 import 'package:yaatra_client/features/trips/domain/entities/trip_seat.dart';
 
 import '../../../../../core/utils/status.dart';
@@ -67,6 +71,8 @@ class BookingCubit extends Cubit<BookingState> {
       emit(state.copyWith(
         selectedTrip: trip,
         refreshSelectedTripStatus: Status.success,
+        selectedSeatsByUser: [],
+        totalPrice: 0,
       ));
     });
   }
@@ -77,6 +83,15 @@ class BookingCubit extends Cubit<BookingState> {
 
   void changeSelectedTrip(Trip trip) {
     emit(state.copyWith(selectedTrip: trip));
+  }
+
+  void changePassengerAndContactDetails(
+      {required List<PassengerDetailsModel> passengerDetails,
+      required PassengerDetailsModel contactPersonDetails}) {
+    emit(state.copyWith(
+      passengerDetails: passengerDetails,
+      contactPersonDetails: contactPersonDetails,
+    ));
   }
 
   void addSelectedSeatByUser(TripSeat seat) {
@@ -97,5 +112,89 @@ class BookingCubit extends Cubit<BookingState> {
               .toList(),
           totalPrice: state.totalPrice - seat.seat.ticketPrice),
     );
+  }
+
+  void payWithKhalti(BuildContext context) {
+    var passengersDetails = state.passengerDetails.map((element) {
+      return {
+        'name': element.name,
+        'phone': element.contact,
+        'seatId': element.seat.id,
+      };
+    }).toList();
+    var contactDetails = {
+      'name': state.contactPersonDetails.name,
+      'email': state.contactPersonDetails.email,
+      'phone': state.contactPersonDetails.contact,
+    };
+
+    var bookingSessionDetails = {'_id': ""};
+
+    print(passengersDetails);
+    print(contactDetails);
+
+    final config = PaymentConfig(
+      amount: state.totalPrice * 100, // Amount should be in paisa
+      productIdentity: 'ticket-booking', // will integrate session id here
+      productName: 'Bus Tickets',
+      productUrl: 'www.yaatra.com.np',
+      additionalData: {
+        // Not mandatory; can be used for reporting purpose
+        'vendor': 'User ID', // will integrate user id here
+      },
+      mobile: state.contactPersonDetails
+          .contact, // Not mandatory; can be used to fill mobile number field
+      mobileReadOnly:
+          false, // Not mandatory; makes the mobile field not editable
+    );
+
+    KhaltiScope.of(context).pay(
+      config: config,
+      preferences: [
+        // PaymentPreference.connectIPS,
+        // PaymentPreference.eBanking,
+        // PaymentPreference.sct,
+        PaymentPreference.khalti,
+      ],
+      onSuccess: (payment) {
+        print("payment success ${payment.productName}");
+        // create booked seats for all passenger
+        // create booking for that event
+        // update trip services
+
+        customSnackbar(
+            context: context, isError: false, message: 'Payment Successful');
+      },
+      onFailure: (failure) {
+        print("payment success ${failure.message}");
+        customSnackbar(
+            context: context,
+            isError: true,
+            message: 'Your payment was failed');
+      },
+      onCancel: () {
+        customSnackbar(
+            context: context,
+            isError: true,
+            message: 'Your payment was cancelled');
+      },
+    );
+  }
+
+  Future<void> clearSelectedUnavailableSeats(List<TripSeat> seats) async {
+    var selectedSeats = state.selectedSeatsByUser;
+    var totalPrice = state.totalPrice;
+
+    seats.forEach((element) {
+      var index =
+          selectedSeats.indexWhere((element) => element.id == element.id);
+      totalPrice -= element.seat.ticketPrice;
+      if (index != -1) {
+        selectedSeats.removeAt(index);
+      }
+    });
+    emit(state.copyWith(
+        selectedSeatsByUser: selectedSeats, totalPrice: totalPrice));
+    refreshSelectedTrip(state.selectedTrip.id);
   }
 }

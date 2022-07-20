@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:yaatra_client/features/trips/data/models/trip_model.dart';
 import '../datasources/fetch_ticket_remote_datasource.dart';
 import '../../domain/repositories/fetch_ticket_repository.dart';
 
@@ -35,4 +36,20 @@ class FetchTicketRepositoryImpl implements FetchTicketRepository{
         return Left(CacheFailure(properties: []));
       }
     }
+
+    @override
+  Future<Either<Failure, TripModel>> fetchTrip(
+      {required String tripId}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final tripDetails =
+            await remoteDataSource.fetchTrip(tripId: tripId);
+        return Right(tripDetails);
+      } on ServerFailure catch (e) {
+        return Left(e);
+      }
+    } else {
+      return Left(CacheFailure(properties: []));
+    }
+  }
 }

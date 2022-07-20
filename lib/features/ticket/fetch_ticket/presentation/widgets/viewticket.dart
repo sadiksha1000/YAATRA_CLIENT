@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/config/size.dart';
 import '../../domain/entities/booking.dart';
+import '../cubits/tickets/fetch_tickets_cubit.dart';
 
 class ViewTicket extends StatelessWidget {
   final Booking _booking;
@@ -18,12 +20,14 @@ class ViewTicket extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FetchTicketsCubit _fetchTicketsCubit =
+        BlocProvider.of<FetchTicketsCubit>(context);
     return GestureDetector(
       onTap: () => _onPressed(_booking),
       child: Padding(
         padding: EdgeInsets.only(top: size(context).height * 0.025),
         child: Container(
-          height: size(context).height * 0.13,
+          height: size(context).height * 0.165,
           padding: EdgeInsets.all(size(context).height * 0.01),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(size(context).width * 0.035),
@@ -38,12 +42,12 @@ class ViewTicket extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Text(
-              //     "${_booking.tripId.departureRoute.source.placeId.name} to ${_booking.tripId.departureRoute.destination.placeId.name}",
-              //     style: Theme.of(context)
-              //         .textTheme
-              //         .headline4!
-              //         .copyWith(color: Theme.of(context).colorScheme.primary)),
+              Text(
+                  "${_fetchTicketsCubit.state.currentTrip.departureRoute.source.stationName} to ${_fetchTicketsCubit.state.currentTrip.departureRoute.source.stationName}",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5!
+                      .copyWith(color: Theme.of(context).colorScheme.primary)),
               SizedBox(height: size(context).height * 0.005),
               Row(
                 children: [

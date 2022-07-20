@@ -1,7 +1,15 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yaatra_client/core/utils/status.dart';
+import 'package:yaatra_client/core/widgets/custom_progress_indicator.dart';
+import 'package:yaatra_client/core/widgets/custom_snackbar.dart';
+import 'package:yaatra_client/features/authentication/presentation/screens/register_screen.dart';
+import 'package:yaatra_client/features/passenger/booking/data/models/booking_session_failure_model.dart';
+import 'package:yaatra_client/features/passenger/booking/data/models/booking_session_success_model.dart';
 import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_cubit.dart';
+import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_session_cubit.dart';
+import 'package:yaatra_client/features/trips/domain/entities/trip_seat.dart';
 import 'package:yaatra_client/features/trips/presentation/widgets/seat_widget.dart';
 import 'reservation_screen.dart';
 
@@ -28,6 +36,8 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
   @override
   void initState() {
     context.read<BookingCubit>().emptySelectedSeatAndPriceByUser();
+    context.read<BookingCubit>().refreshSelectedTrip(
+        context.read<BookingCubit>().state.selectedTrip.id);
     super.initState();
   }
 
@@ -165,10 +175,9 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                                     .selectedTrip
                                     .id),
                             child: BlocBuilder<BookingCubit, BookingState>(
-                              buildWhen: (previous, current) =>
-                                  current.selectedTrip != previous.selectedTrip,
+                              // buildWhen: (previous, current) =>
+                              //     current.selectedTrip != previous.selectedTrip,
                               builder: (context, state) {
-                              
                                 return GridView.builder(
                                   itemCount:
                                       state.selectedTrip.allTripSeats.length,
@@ -208,7 +217,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                   horizontal: size(context).width * 0.05,
                   vertical: size(context).height * 0.005),
               child: Container(
-                height: size(context).height * 0.14,
+                // height: size(context).height * 0.14,
                 decoration: BoxDecoration(
                     borderRadius:
                         BorderRadius.circular(size(context).width * 0.04),
@@ -309,15 +318,56 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                         ),
                       ),
                       // SizedBox(height: size(context).height * 0.02),
-                      CustomButton(
-                          onPressed: () {
+                      BlocConsumer<BookingSessionCubit, BookingSessionState>(
+                        listener: (context, state) {
+                          if (state.sessionStatus == Status.error) {
+                            context
+                                .read<BookingCubit>()
+                                .clearSelectedUnavailableSeats(state
+                                    .bookingFailureSession.unAvailableSeats);
+                            customSnackbar(
+                                context: context,
+                                isError: true,
+                                message: state.bookingFailureSession.message);
+                          } else if (state.sessionStatus == Status.success) {
                             Navigator.pushNamed(
-                              context,
-                              ReservationScreen.routeName,
-                            );
-                          },
-                          label: "Buy Tickets",
-                          disable: false)
+                                context, ReservationScreen.routeName);
+                          }
+                        },
+                        builder: (context, state) {
+                          return state.sessionStatus == Status.loading
+                              ? CustomProgressIndicator(onTap: () {
+                                  context
+                                      .read<BookingSessionCubit>()
+                                      .cancelSessionLoading();
+                                })
+                              : CustomButton(
+                                  onPressed: () async {
+                                    // check all the seats is available or not
+                                    BookingSessionCubit bookingSessionCubit =
+                                        context.read<BookingSessionCubit>();
+                                    BookingCubit bookingCubit =
+                                        context.read<BookingCubit>();
+
+                                    await bookingSessionCubit
+                                        .checkSeatsAvailability(
+                                      selectedSeats: bookingCubit
+                                          .state.selectedSeatsByUser,
+                                      tripId:
+                                          bookingCubit.state.selectedTrip.id,
+                                      userId: "userid",
+                                    );
+                                  },
+                                  label: "Buy Tickets",
+                                  disable: context
+                                          .read<BookingCubit>()
+                                          .state
+                                          .selectedSeatsByUser
+                                          .isEmpty
+                                      ? true
+                                      : false);
+                        },
+                      )
                     ],
                   );
                 }),

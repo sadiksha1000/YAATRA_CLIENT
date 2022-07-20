@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yaatra_client/core/utils/status.dart';
 import 'package:yaatra_client/core/widgets/custom_popup_message.dart';
 import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_cubit.dart';
 import 'package:yaatra_client/features/trips/domain/entities/trip_seat.dart';
@@ -58,7 +59,6 @@ class _SeatWidgetState extends State<SeatWidget> {
             isSelected = !isSelected;
           });
           bookingCubit.removeSelectedSeatByUser(widget.seat);
-          
         },
         child: Column(
           children: [
@@ -94,16 +94,27 @@ class _SeatWidgetState extends State<SeatWidget> {
   @override
   Widget build(BuildContext context) {
     BookingCubit _bookingCubit = BlocProvider.of<BookingCubit>(context);
-    return GestureDetector(
-      onTap: () {
-        isSelected = !isSelected;
-        context
-            .read<BookingCubit>()
-            .updateSelectedSeats(widget.index, isSelected);
+    print("I am rebuilding");
+
+    return BlocConsumer<BookingCubit, BookingState>(
+      listener: (context, state) {
+        if (state.refreshSelectedTripStatus == Status.loading) {
+          isSelected = false;
+        }
       },
-      child: Center(
-        child: showValidSeat(bookingCubit: _bookingCubit),
-      ),
+      builder: (context, state) {
+        return GestureDetector(
+          onTap: () {
+            isSelected = !isSelected;
+            context
+                .read<BookingCubit>()
+                .updateSelectedSeats(widget.index, isSelected);
+          },
+          child: Center(
+            child: showValidSeat(bookingCubit: _bookingCubit),
+          ),
+        );
+      },
     );
   }
 }
