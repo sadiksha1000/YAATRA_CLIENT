@@ -106,6 +106,7 @@ class TripRemoteDataSourceImpl implements TripRemoteDataSource {
       final response = await client.post(Uri.parse(tripUrl), body: {
         '_id': id,
       });
+      print(response.body);
       if (response.statusCode == 200) {
         var decodedResponse = ResponseModel.fromJson(response.body);
 

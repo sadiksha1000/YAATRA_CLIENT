@@ -20,6 +20,7 @@ import 'package:yaatra_client/features/authentication/presentation/blocs/cubit/a
 import 'package:yaatra_client/features/passenger/booking/data/datasources/booking_remote_datasource.dart';
 import 'package:yaatra_client/features/passenger/booking/domain/repositories/booking_repository.dart';
 import 'package:yaatra_client/features/passenger/booking/domain/usecases/check_seat_availability_usecase.dart';
+import 'package:yaatra_client/features/passenger/booking/domain/usecases/create_booking_usecase.dart';
 import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_cubit.dart';
 import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_session_cubit.dart';
 import 'package:yaatra_client/features/passenger/profile/data/datasources/passenger_profile_remote_datasourse.dart';
@@ -40,6 +41,7 @@ import 'package:yaatra_client/features/ticket/fetch_ticket/domain/usecases/fetch
 import 'package:yaatra_client/features/ticket/fetch_ticket/domain/usecases/fetch_trip_usecase.dart';
 import 'package:yaatra_client/features/trips/domain/usecases/fetch_trip_byid_usecase.dart';
 
+import 'core/config/dark_theme.dart';
 import 'features/authentication/data/repositories/user_repository_impl.dart';
 import 'features/authentication/domain/repositories/user_repository.dart';
 import 'features/authentication/domain/usecases/login_user_usecase.dart';
@@ -147,6 +149,8 @@ void main() async {
     FetchTripsUseCase fetchTripUseCase = FetchTripsUseCase(tripRepository);
     FetchTripByIdUseCase fetchTripByIdUseCase =
         FetchTripByIdUseCase(tripRepository);
+    CreateBookingUseCase createBookingUseCase =
+        CreateBookingUseCase(bookingRepository);
     FetchBookingsUseCase fetchBookingsUseCase =
         FetchBookingsUseCase(fetchTicketRepository);
     RefreshCurrentUserUseCase refreshCurrentUserUseCase =
@@ -220,6 +224,7 @@ void main() async {
 
     BookingCubit bookingCubit = BookingCubit(
       fetchTripById: fetchTripByIdUseCase,
+      createBooking: createBookingUseCase,
     );
 
     BookingSessionCubit bookingSessionCubit = BookingSessionCubit(
@@ -334,7 +339,7 @@ class AppView extends StatelessWidget {
             title: 'Yaatra Client',
             debugShowCheckedModeBanner: false,
             theme: lightTheme(),
-            // darkTheme: darkTheme(),
+            darkTheme: darkTheme(),
             themeMode: ThemeMode.light,
             supportedLocales: const <Locale>[
               Locale('en', 'US'),

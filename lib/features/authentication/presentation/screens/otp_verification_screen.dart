@@ -111,7 +111,8 @@ class OTPVerificationScreen extends StatelessWidget {
                     stream: _registerCubit.isOTPValid,
                     builder: (context, snapshot) {
                       return CustomButton(
-                          padding1: EdgeInsets.symmetric(horizontal: size(context).width*0.04),
+                        padding1: EdgeInsets.symmetric(
+                            horizontal: size(context).width * 0.04),
                         onPressed: () {
                           bool isVerified = _registerCubit.otpVerified();
                           if (isVerified) {

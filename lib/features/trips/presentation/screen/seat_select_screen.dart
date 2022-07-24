@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yaatra_client/core/utils/status.dart';
 import 'package:yaatra_client/core/widgets/custom_progress_indicator.dart';
 import 'package:yaatra_client/core/widgets/custom_snackbar.dart';
+import 'package:yaatra_client/features/app/presentation/blocs/app/app_bloc.dart';
 import 'package:yaatra_client/features/authentication/presentation/screens/register_screen.dart';
 import 'package:yaatra_client/features/passenger/booking/data/models/booking_session_failure_model.dart';
 import 'package:yaatra_client/features/passenger/booking/data/models/booking_session_success_model.dart';
@@ -186,7 +187,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                                       const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 5,
                                     childAspectRatio: 1.5,
-                                    crossAxisSpacing: 10,
+                                    crossAxisSpacing: 0,
                                     mainAxisSpacing: 10,
                                   ),
                                   itemBuilder:
@@ -330,6 +331,9 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                                 isError: true,
                                 message: state.bookingFailureSession.message);
                           } else if (state.sessionStatus == Status.success) {
+                            context
+                                .read<BookingSessionCubit>()
+                                .setSessionStatusInitial();
                             Navigator.pushNamed(
                                 context, ReservationScreen.routeName);
                           }
@@ -355,7 +359,11 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                                           .state.selectedSeatsByUser,
                                       tripId:
                                           bookingCubit.state.selectedTrip.id,
-                                      userId: "userid",
+                                      userId: context
+                                          .read<AppBloc>()
+                                          .state
+                                          .user
+                                          .uid,
                                     );
                                   },
                                   label: "Buy Tickets",
@@ -380,7 +388,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
               padding:
                   EdgeInsets.symmetric(horizontal: size(context).width * 0.02),
               child: Container(
-                height: size(context).height * 0.19,
+                // height: size(context).height * 0.19,
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: size(context).height * 0.02,
@@ -402,10 +410,10 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                       SizedBox(
                         height: size(context).height * 0.015,
                       ),
-                      Container(
-                        height: size(context).height * 0.125,
+                      SizedBox(
                         width: size(context).width * 0.99,
                         child: GridView.builder(
+                            shrinkWrap: true,
                             clipBehavior: Clip.hardEdge,
                             gridDelegate:
                                 const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -434,7 +442,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                   EdgeInsets.symmetric(horizontal: size(context).width * 0.07),
               child: Container(
                 // color: Colors.blue,
-                height: size(context).height * 0.3,
+                height: size(context).height * 0.7,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -465,9 +473,10 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                     SizedBox(height: size(context).height * 0.01),
                     Container(
                       width: double.maxFinite,
-                      height: size(context).height * 0.2,
+                      height: size(context).height * 0.6,
                       child: TabBarView(controller: _tabController, children: [
                         GridView.builder(
+                            shrinkWrap: true,
                             gridDelegate:
                                 const SliverGridDelegateWithMaxCrossAxisExtent(
                                     maxCrossAxisExtent: 200,
@@ -480,7 +489,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                                 margin:
                                     EdgeInsets.all(size(context).width * 0.04),
                                 decoration: BoxDecoration(
-                                    color: Colors.deepPurple,
+                                    color: Colors.white,
                                     borderRadius: BorderRadius.circular(20),
                                     image: const DecorationImage(
                                         image: NetworkImage(
@@ -501,7 +510,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                                 margin:
                                     EdgeInsets.all(size(context).width * 0.04),
                                 decoration: BoxDecoration(
-                                    color: Colors.deepPurple,
+                                    color: Colors.white,
                                     borderRadius: BorderRadius.circular(20),
                                     image: DecorationImage(
                                         image: AssetImage(
@@ -522,7 +531,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                                 margin:
                                     EdgeInsets.all(size(context).width * 0.04),
                                 decoration: BoxDecoration(
-                                    color: Colors.deepPurple,
+                                    color: Colors.white,
                                     borderRadius: BorderRadius.circular(20),
                                     image: DecorationImage(
                                         image: AssetImage(
@@ -553,13 +562,14 @@ class SeatLegendWidget extends StatelessWidget {
     return SizedBox(
       height: size(context).height * 0.05,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
             padding: EdgeInsets.all(size(context).width * 0.01),
             child: StatusWidget(
               label: "Available",
               color: Theme.of(context).colorScheme.secondary,
-              fontsize: size(context).height * 0.0175,
+              fontsize: size(context).height * 0.015,
             ),
           ),
           Padding(
@@ -567,7 +577,7 @@ class SeatLegendWidget extends StatelessWidget {
             child: StatusWidget(
               label: "Selected",
               color: Theme.of(context).colorScheme.primary,
-              fontsize: size(context).height * 0.0175,
+              fontsize: size(context).height * 0.015,
             ),
           ),
           Padding(
@@ -575,7 +585,7 @@ class SeatLegendWidget extends StatelessWidget {
             child: StatusWidget(
               label: "Booked",
               color: Theme.of(context).colorScheme.error,
-              fontsize: size(context).height * 0.0175,
+              fontsize: size(context).height * 0.015,
             ),
           ),
           Padding(
@@ -583,7 +593,7 @@ class SeatLegendWidget extends StatelessWidget {
             child: StatusWidget(
               label: "Hold",
               color: Theme.of(context).colorScheme.onTertiary,
-              fontsize: size(context).height * 0.0175,
+              fontsize: size(context).height * 0.015,
             ),
           ),
         ],

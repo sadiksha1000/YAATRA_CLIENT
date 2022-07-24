@@ -2,6 +2,9 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yaatra_client/core/utils/status.dart';
+import 'package:yaatra_client/core/widgets/custom_progress_indicator.dart';
+import 'package:yaatra_client/core/widgets/custom_snackbar.dart';
 import '../../../../core/config/constants.dart';
 import '../../../../core/config/size.dart';
 import '../../../../core/widgets/custom_appbar.dart';
@@ -70,9 +73,11 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
   @override
   void initState() {
     super.initState();
-    popDestinations =
-        List.generate(6, (index) => {"id": index, "name": "Destination $index"})
-            .toList();
+    seatController.text = "1";
+    context.read<FetchTripCubit>().selectedNumberOfSeatsChanged("1");
+    context.read<FetchTripCubit>().selectedDateChanged(selectedDate);
+    popDestinations = List.generate(
+        20, (index) => {"id": index, "name": "Destination $index"}).toList();
 
     popBuses =
         List.generate(10, (index) => {"id": index, "name": "Buses $index"})
@@ -110,12 +115,12 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
         BlocProvider.of<FetchStationCubit>(context);
 
     FetchTripCubit _fetchTripCubit = BlocProvider.of<FetchTripCubit>(context);
-    tomorrowDate =
-        DateTime(selectedDate.year, selectedDate.month, selectedDate.day + 1);
+    var todayDate = DateTime.now();
+    tomorrowDate = DateTime(todayDate.year, todayDate.month, todayDate.day + 1);
 
     return Scaffold(
         appBar: customAppBar(
-          title: "",
+          title: "Yaatra",
           context: context,
           isBackButton: false,
           isDrawerEnabled: true,
@@ -132,16 +137,15 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
               Padding(
                 padding: EdgeInsets.all(size(context).height * 0.02),
                 child: Container(
-                    height: size(context).height * 0.465,
+                    // height: size(context).height * 0.465,
                     decoration: Constants.cardDecoration(context),
-                    child: Stack(
-                      clipBehavior: Clip.none,
+                    child: Column(
                       children: [
                         Column(
                           children: [
                             SingleChildScrollView(
                               child: SizedBox(
-                                height: size(context).height * 0.165,
+                                // height: size(context).height * 0.165,
                                 child: Row(
                                   children: [
                                     Padding(
@@ -185,7 +189,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                                     Flexible(
                                       child: SizedBox(
                                         width: size(context).width * 0.55,
-                                        height: size(context).height * 0.3,
+                                        // height: size(context).height * 0.3,
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -215,6 +219,10 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                                                   },
                                                 );
                                               },
+                                            ),
+                                            SizedBox(
+                                              height:
+                                                  size(context).height * 0.005,
                                             ),
                                             BlocBuilder<FetchStationCubit,
                                                 FetchStationState>(
@@ -292,7 +300,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                               ),
                             ),
                             SizedBox(
-                              height: size(context).height * 0.25,
+                              height: size(context).height * 0.27,
                               child: Row(
                                 children: [
                                   Padding(
@@ -328,12 +336,19 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(width: size(context).width * 0.02),
                                   Expanded(
                                     child: Column(
                                       // crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         TextFormField(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2!
+                                              .copyWith(
+                                                fontSize:
+                                                    size(context).width * 0.036,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                           onTap: () async {
                                             _selectDate(context);
                                           },
@@ -343,17 +358,20 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                                               floatingLabelBehavior:
                                                   FloatingLabelBehavior.always,
                                               labelText: "Date",
-                                              // hintText:
-                                              //     '${selectedDate.year}/${selectedDate.month}/${selectedDate.day}',
-                                              // hintStyle: TextStyle(
-                                              //   fontSize: size(context).height *
-                                              //       0.016,
-                                              // ),
-                                              labelStyle: TextStyle(
-                                                fontSize: size(context).height *
-                                                    0.022,
-                                              ),
-                                              border: InputBorder.none),
+                                              labelStyle: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle1!
+                                                  .copyWith(
+                                                      fontSize:
+                                                          size(context).width *
+                                                              0.043,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                              border: InputBorder.none,
+                                              filled: true),
                                         ),
                                         Row(
                                           children: [
@@ -365,6 +383,11 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                                                   dateController.text =
                                                       DateFormat.yMd()
                                                           .format(selectedDate);
+
+                                                  context
+                                                      .read<FetchTripCubit>()
+                                                      .selectedDateChanged(
+                                                          selectedDate);
                                                 });
                                               },
                                             ),
@@ -379,48 +402,49 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                                                   dateController.text =
                                                       DateFormat.yMd()
                                                           .format(selectedDate);
+                                                  context
+                                                      .read<FetchTripCubit>()
+                                                      .selectedDateChanged(
+                                                          selectedDate);
                                                 });
                                               },
                                             )
                                           ],
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.all(
-                                                  size(context).height * 0.005),
-                                              child: SizedBox(
-                                                width:
-                                                    size(context).width * 0.55,
-                                                child: DottedLine(
-                                                  dashColor: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
                                         TextFormField(
-                                          // initialValue: '$selectedSeat',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2!
+                                              .copyWith(
+                                                fontSize:
+                                                    size(context).width * 0.036,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                           keyboardType: TextInputType.number,
                                           controller: seatController,
                                           decoration: InputDecoration(
-                                              floatingLabelBehavior:
-                                                  FloatingLabelBehavior.always,
-                                              // hintText: '$selectedSeat',
-                                              labelText: "Number of seats",
-                                              hintStyle: TextStyle(
-                                                fontSize: size(context).height *
-                                                    0.016,
-                                              ),
-                                              labelStyle: TextStyle(
-                                                fontSize: size(context).height *
-                                                    0.022,
-                                              ),
-                                              border: InputBorder.none),
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                            labelText: "Number of seats",
+                                            hintStyle: TextStyle(
+                                              fontSize:
+                                                  size(context).height * 0.010,
+                                            ),
+                                            labelStyle: Theme.of(context)
+                                                .textTheme
+                                                .subtitle1!
+                                                .copyWith(
+                                                    fontSize:
+                                                        size(context).width *
+                                                            0.043,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                            border: InputBorder.none,
+                                            filled: true,
+                                          ),
                                         ),
                                         Expanded(
                                           child: ListView.builder(
@@ -447,25 +471,41 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                             ),
                           ],
                         ),
-                        Positioned(
-                          bottom: -26,
-                          left: 80,
-                          right: 80,
-                          child: StreamBuilder<bool>(
-                              stream: _fetchTripCubit.submitValid,
-                              builder: (context, snapshot) {
-                                return CustomButton(
-                                  onPressed: () async {
-                                    print('searched');
-                                    await _fetchTripCubit.searchBuses();
-                                    // _fetchBusCubit.fetchAllBuses();
-                                    Navigator.of(context)
-                                        .pushNamed(ViewBusesScreen.routeName);
-                                  },
-                                  label: "Search",
-                                  disable: false,
-                                );
-                              }),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: size(context).height * 0.02),
+                          child: SizedBox(
+                            child: StreamBuilder<bool>(
+                                stream: _fetchTripCubit.submitValid,
+                                builder: (context, snapshot) {
+                                  return BlocConsumer<FetchTripCubit,
+                                      FetchTripState>(
+                                    listener: (context, state) {
+                                      if (state.searchBusStatus ==
+                                          Status.success) {
+                                        Navigator.of(context).pushNamed(
+                                            ViewBusesScreen.routeName);
+                                      }
+                                    },
+                                    builder: (context, state) {
+                                      return state.searchBusStatus ==
+                                              Status.loading
+                                          ? CustomProgressIndicator(onTap: () {
+                                              _fetchTripCubit.cancelSearch();
+                                            })
+                                          : CustomButton(
+                                              onPressed: () async {
+                                                await _fetchTripCubit
+                                                    .searchBuses();
+                                              },
+                                              label: "Search",
+                                              disable: snapshot.hasError ||
+                                                  snapshot.data == false,
+                                            );
+                                    },
+                                  );
+                                }),
+                          ),
                         )
                       ],
                     )),
@@ -591,13 +631,13 @@ class SourceDestinationInputWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: size(context).height * 0.018),
+        SizedBox(height: size(context).height * 0.008),
         Text(
           label,
           style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                fontSize: size(context).width * 0.033,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+              fontSize: size(context).width * 0.033,
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold),
         ),
         SizedBox(height: size(context).height * 0.0013),
         GestureDetector(
@@ -639,9 +679,9 @@ class SourceDestinationInputWidget extends StatelessWidget {
             child: Text(
               selectedStation.isNotEmpty
                   ? "${selectedStation.stationName} (${selectedStation.placeId.name})"
-                  : '',
+                  : 'Select a station',
               style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                    fontSize: size(context).height * 0.018,
+                    fontSize: size(context).width * 0.037,
                   ),
             ),
           ),

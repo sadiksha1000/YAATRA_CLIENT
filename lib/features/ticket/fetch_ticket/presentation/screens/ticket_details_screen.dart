@@ -27,6 +27,7 @@ class TicketDetailsScreen extends StatefulWidget {
 class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
   Booking initBooking = Booking.empty;
   TripModel initTrip = TripModel.empty;
+
   final qrKey = GlobalKey();
   final qrKey2 = GlobalKey();
   String qrData = 'Our Qr Data';
@@ -45,6 +46,19 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
         "TicketDetailsStateCurrentTrip${_fetchTicketsCubit.state.currentTrip}");
     super.didChangeDependencies();
   }
+
+  // String totalSeats() {
+  //   FetchTicketsCubit _fetchTicketsCubit =
+  //       BlocProvider.of<FetchTicketsCubit>(context);
+  //   var seats = [];
+  //   _fetchTicketsCubit.state.currentTrip.allTripSeats == null
+  //       seats.addAll(_fetchTicketsCubit.state.currentTrip.seats)
+  //       : seats.addAll(_fetchTicketsCubit.state.currentTrip.allTripSeats);
+  //   _fetchTicketsCubit.state.currentTrip.allTripSeats.forEach((element) {
+  //     seats.add(element.label);
+  //   });
+  //   return seats.toString();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +216,10 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
                                     LabelWidget(
                                         label: "Ticket No:",
                                         value: initBooking.id),
-                                    LabelWidget(label: "Seat No:", value: "A1"),
+                                    LabelWidget(
+                                      label: "Seat No:",
+                                      value: "A1",
+                                    )
                                   ],
                                 ),
                                 LabelWidget(

@@ -11,6 +11,7 @@ import '../../../../core/widgets/custom_button2_widget.dart';
 import '../../../../core/widgets/custom_textformfield_widget.dart';
 import '../../../../core/widgets/passenger_detail_textformfield.dart';
 import '../../../passenger/booking/presentation/cubit/booking_cubit.dart';
+import '../widgets/booking_session_timer_widget.dart';
 import 'proceed_to_pay_screen.dart';
 
 class ReservationScreen extends StatefulWidget {
@@ -52,6 +53,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(parent: _scrollPhysics),
           children: [
+            BookingSessionTimerWidget(),
             Container(
               margin: EdgeInsets.all(size(context).width * 0.04),
               child: ListView(
@@ -204,6 +206,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
     );
   }
 }
+
+
 
 class PassengerDetailsWidget extends StatelessWidget {
   final Function onChangedName;
