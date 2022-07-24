@@ -30,6 +30,7 @@ class TextLabelWidget extends StatelessWidget {
             style: TextStyle(
               color: Theme.of(context).colorScheme.primary,
               fontSize: size(context).height * 0.0175,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],

@@ -42,57 +42,48 @@ class _TicketScreenState extends State<TicketScreen> {
         isBackButton: false,
       ),
       endDrawer: const CustomDrawer(),
-      body: Center(
-          child: Column(
-        children: [
-          GestureDetector(
-            child: // Card
-                Container(
-              height: size(context).height * 0.17,
-              decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.circular(size(context).width * 0.035),
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: size(context).height * 0.05,
-                      color: Color.fromARGB(36, 206, 203, 203),
-                      spreadRadius: size(context).height * 0.015,
-                    ),
-                  ]),
-              margin: EdgeInsets.all(size(context).height * 0.02),
-              padding: EdgeInsets.all(size(context).height * 0.014),
-              child: BlocBuilder<FetchTicketsCubit, FetchTicketsState>(
-                builder: (context, state) {
-                  return state.tickets.isEmpty
-                      ? Text(
-                          "No tickets available",
-                          style: TextStyle(
-                            fontSize: size(context).height * 0.03,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        )
-                      : ListView.builder(
-                          itemCount: state.tickets.length,
-                          itemBuilder: (ctx, index) {
-                            Booking _booking = state.tickets[index];
-                            return ViewTicket(
-                              booking: _booking,
-                              onPressed: (booking) {
-                                Navigator.pushNamed(
-                                    context, TicketDetailsScreen.routeName,
-                                    arguments: booking);
-                              },
-                            );
-                          },
-                        );
-                },
+      body: SingleChildScrollView(
+        child: Center(
+            child: Column(
+          children: [
+            GestureDetector(
+              child: Container(
+                height: size(context).height,
+                margin: EdgeInsets.symmetric(
+                    horizontal: size(context).height * 0.015),
+                padding: EdgeInsets.all(size(context).height * 0.01),
+                child: BlocBuilder<FetchTicketsCubit, FetchTicketsState>(
+                  builder: (context, state) {
+                    return state.tickets.isEmpty
+                        ? Text(
+                            "No tickets available",
+                            style: TextStyle(
+                              fontSize: size(context).height * 0.03,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: state.tickets.length,
+                            itemBuilder: (ctx, index) {
+                              Booking _booking = state.tickets[index];
+                              return ViewTicket(
+                                booking: _booking,
+                                onPressed: (booking) {
+                                  Navigator.pushNamed(
+                                      context, TicketDetailsScreen.routeName,
+                                      arguments: booking);
+                                },
+                              );
+                            },
+                          );
+                  },
+                ),
               ),
-            ),
-          )
-        ],
-      )),
+            )
+          ],
+        )),
+      ),
     );
   }
 }

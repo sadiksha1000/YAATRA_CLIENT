@@ -9,7 +9,7 @@ class BookingModel extends Booking {
   // BookedSeats left
   const BookingModel({
     required String id,
-    required Trip tripId,
+    required String tripId,
     required User userId,
     required String name,
     required String phone,
@@ -30,7 +30,7 @@ class BookingModel extends Booking {
 
   static final empty = BookingModel(
       id: '',
-      tripId: Trip.empty,
+      tripId: '',
       userId: User.empty,
       name: '',
       phone: '',
@@ -43,7 +43,7 @@ class BookingModel extends Booking {
       {required String message}) {
     return BookingModel(
         id: map['_id'],
-        tripId: Trip.fromMap(map['tripId']),
+        tripId: map['tripId'],
         userId: User.fromMap(map['userId']),
         name: map['name'],
         phone: map['phone'],
@@ -58,7 +58,7 @@ class BookingModel extends Booking {
   Map<String, dynamic> toMap() {
     return {
       '_id': id,
-      'tripId': tripId.toMap(),
+      'tripId': tripId,
       'userId': userId.toMap(),
       'name': name,
       'phone': phone,

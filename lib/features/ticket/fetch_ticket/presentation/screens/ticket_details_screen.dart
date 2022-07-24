@@ -2,12 +2,15 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:yaatra_client/features/ticket/fetch_ticket/presentation/cubits/tickets/fetch_tickets_cubit.dart';
 
 import '../../../../../core/config/size.dart';
 import '../../../../../core/widgets/custom_appbar.dart';
 import '../../../../../core/widgets/custom_button_widget.dart';
 import '../../../../../core/widgets/custom_drawer.dart';
+import '../../../../trips/data/models/trip_model.dart';
 import '../../domain/entities/booking.dart';
 import '../widgets/custombuttonwidget.dart';
 import '../widgets/labelwidget.dart';
@@ -23,6 +26,8 @@ class TicketDetailsScreen extends StatefulWidget {
 
 class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
   Booking initBooking = Booking.empty;
+  TripModel initTrip = TripModel.empty;
+
   final qrKey = GlobalKey();
   final qrKey2 = GlobalKey();
   String qrData = 'Our Qr Data';
@@ -34,11 +39,31 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
     if (arguments != null) {
       initBooking = arguments as Booking;
     }
+    FetchTicketsCubit _fetchTicketsCubit =
+        BlocProvider.of<FetchTicketsCubit>(context);
+    _fetchTicketsCubit.fetchTrip(initBooking.tripId);
+    print(
+        "TicketDetailsStateCurrentTrip${_fetchTicketsCubit.state.currentTrip}");
     super.didChangeDependencies();
   }
 
+  // String totalSeats() {
+  //   FetchTicketsCubit _fetchTicketsCubit =
+  //       BlocProvider.of<FetchTicketsCubit>(context);
+  //   var seats = [];
+  //   _fetchTicketsCubit.state.currentTrip.allTripSeats == null
+  //       seats.addAll(_fetchTicketsCubit.state.currentTrip.seats)
+  //       : seats.addAll(_fetchTicketsCubit.state.currentTrip.allTripSeats);
+  //   _fetchTicketsCubit.state.currentTrip.allTripSeats.forEach((element) {
+  //     seats.add(element.label);
+  //   });
+  //   return seats.toString();
+  // }
+
   @override
   Widget build(BuildContext context) {
+    FetchTicketsCubit _fetchTicketsCubit =
+        BlocProvider.of<FetchTicketsCubit>(context);
     return Scaffold(
         appBar: customAppBar(title: "My Ticket", context: context),
         endDrawer: const CustomDrawer(),
@@ -62,7 +87,8 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
                                   ),
                         ),
                         Text(
-                          initBooking.tripId.departureRoute.source.placeId.name,
+                          _fetchTicketsCubit.state.currentTrip.departureRoute
+                              .source.stationName,
                           style: Theme.of(context).textTheme.subtitle1,
                         ),
                       ],
@@ -78,8 +104,8 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
                                   ),
                         ),
                         Text(
-                          initBooking
-                              .tripId.departureRoute.destination.placeId.name,
+                          _fetchTicketsCubit.state.currentTrip.departureRoute
+                              .destination.stationName,
                           style: Theme.of(context).textTheme.subtitle1,
                         )
                       ],
@@ -94,25 +120,30 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          initBooking.tripId.busId.name,
+                          _fetchTicketsCubit.state.currentTrip.busId.name,
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1!
                               .copyWith(color: Colors.black),
                         ),
-                        const TextLabelWidget(
-                          label: 'Time',
-                          value: '12:00 PM',
+                        TextLabelWidget(
+                          label: 'Time:',
+                          value: _fetchTicketsCubit
+                              .state.currentTrip.departureTime
+                              .toString()
+                              .split(' ')[1],
                         ),
                         TextLabelWidget(
                           label: 'Date:',
-                          value: initBooking.tripId.tripStartDate
+                          value: _fetchTicketsCubit
+                              .state.currentTrip.tripStartDate
                               .toString()
                               .split(' ')[0],
                         ),
                         TextLabelWidget(
                           label: "Bus No:",
-                          value: initBooking.tripId.busId.plateNumber,
+                          value: _fetchTicketsCubit
+                              .state.currentTrip.busId.plateNumber,
                         ),
                         TextLabelWidget(
                           label: "Ticket No:",
@@ -120,17 +151,6 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
                         ),
                       ],
                     ),
-                    Container(
-                      height: size(context).height * 0.10,
-                      width: size(context).height * 0.10,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(
-                              'assets/images/illustrations/googleicon.png'),
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    )
                   ],
                 ),
                 SizedBox(height: size(context).height * 0.04),
@@ -142,7 +162,7 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
                 Padding(
                   padding: EdgeInsets.all(size(context).height * 0.007),
                   child: Container(
-                      height: size(context).height * 0.5,
+                      height: size(context).height * 0.49,
                       decoration: BoxDecoration(
                           borderRadius:
                               BorderRadius.circular(size(context).width * 0.04),
@@ -171,7 +191,7 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
                             ),
                             Center(
                                 child: Text(
-                              "${initBooking.tripId.busId.name} - ${initBooking.tripId.busId.plateNumber}",
+                              "${_fetchTicketsCubit.state.currentTrip.busId.name} - ${_fetchTicketsCubit.state.currentTrip.busId.plateNumber}",
                               style: TextStyle(
                                   fontSize: size(context).height * 0.02),
                             )),
@@ -194,17 +214,21 @@ class _TicketDetailsScreenState extends State<TicketDetailsScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     LabelWidget(
-                                        label: "Ticket No:", value: "abcd"),
-                                    LabelWidget(label: "Seat No:", value: "A1"),
+                                        label: "Ticket No:",
+                                        value: initBooking.id),
+                                    LabelWidget(
+                                      label: "Seat No:",
+                                      value: "A1",
+                                    )
                                   ],
                                 ),
                                 LabelWidget(
-                                    label: "Name:", value: "Riya Ranjit"),
+                                    label: "Name:", value: initBooking.name),
                                 LabelWidget(
-                                    label: "Phone No:", value: "98277356477"),
+                                    label: "Phone No:",
+                                    value: initBooking.phone),
                                 LabelWidget(
-                                    label: "Email:",
-                                    value: "riyaranjit00@gmail.com"),
+                                    label: "Email:", value: initBooking.email),
                               ],
                             ),
                           ],

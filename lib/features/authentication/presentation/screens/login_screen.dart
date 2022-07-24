@@ -39,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
             child: BlocListener<AuthCubit, AuthState>(
               listener: (context, state) {
                 if (state.loginStatus == AuthStatus.error) {
-                  print("this is user when error happens${state.user}");
                   _appBloc.add(AppUserChanged(user: state.user));
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -54,9 +53,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   );
                 } else if (state.loginStatus == AuthStatus.success) {
-                  Navigator.of(context)
-                      .pushReplacementNamed(PassengerDashboardScreen.routeName);
-                  print("this is user when success login happens${state.user}");
                   _appBloc.add(AppUserChanged(user: state.user));
                   if (state.user.isPassenger && state.user.isAgent) {
                     if (state.user.activeRole == 'passenger') {

@@ -33,8 +33,10 @@ class LabelWidget extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontSize: size(context).height * 0.0185),
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: size(context).height * 0.0185,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),

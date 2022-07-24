@@ -5,7 +5,7 @@ import '../../../../trips/domain/entities/user.dart';
 
 class Booking extends Equatable {
   final String id;
-  final Trip tripId;
+  final String tripId;
   final User userId;
   final String name;
   final String phone;
@@ -28,7 +28,7 @@ class Booking extends Equatable {
 
   static final empty = Booking(
       id: '',
-      tripId: Trip.empty,
+      tripId: '',
       userId: User.empty,
       name: '',
       phone: '',

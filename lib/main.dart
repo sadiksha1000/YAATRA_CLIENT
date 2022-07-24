@@ -38,6 +38,7 @@ import 'package:yaatra_client/features/passenger/applyasagent/data/datasources/a
 import 'package:yaatra_client/features/passenger/applyasagent/domain/repositories/apply_as_agent_repository.dart';
 import 'package:yaatra_client/features/passenger/applyasagent/domain/usecases/refresh_apply_as_agent_usecase.dart';
 import 'package:yaatra_client/features/ticket/fetch_ticket/domain/usecases/fetch_bookings_usecase.dart';
+import 'package:yaatra_client/features/ticket/fetch_ticket/domain/usecases/fetch_trip_usecase.dart';
 import 'package:yaatra_client/features/trips/domain/usecases/fetch_trip_byid_usecase.dart';
 
 import 'core/config/dark_theme.dart';
@@ -170,6 +171,9 @@ void main() async {
     CheckSeatAvailabilityUseCase checkSeatAvailabilityUsecase =
         CheckSeatAvailabilityUseCase(bookingRepository);
 
+    FetchCurrentTripUseCase fetchCurrentTripUseCase =
+        FetchCurrentTripUseCase(fetchTicketRepository);
+
     // cubits
     AuthCubit registerCubit = AuthCubit(
       registerUseCase: registerUserUseCase,
@@ -200,7 +204,10 @@ void main() async {
         FetchTripCubit(network: networkInfo, fetchTripsCase: fetchTripUseCase);
 
     FetchTicketsCubit fetchTicketCubit = FetchTicketsCubit(
-        network: networkInfo, fetchBookingCase: fetchBookingsUseCase);
+      network: networkInfo,
+      fetchBookingCase: fetchBookingsUseCase,
+      fetchCurrentTripCase: fetchCurrentTripUseCase,
+    );
 
     ApplyAsAgentCubit applyAsAgentCubit = ApplyAsAgentCubit(
       networkInfo: networkInfo,

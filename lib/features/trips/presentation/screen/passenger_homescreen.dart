@@ -135,7 +135,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                   introHeader: "Hey Passenger",
                   introDesc: "What's your next trip?"),
               Padding(
-                padding: EdgeInsets.all(size(context).height * 0.0165),
+                padding: EdgeInsets.all(size(context).height * 0.02),
                 child: Container(
                     // height: size(context).height * 0.465,
                     decoration: Constants.cardDecoration(context),
@@ -165,7 +165,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                                           ),
                                           DottedLine(
                                             direction: Axis.vertical,
-                                            lineLength: 50,
+                                            lineLength: 40,
                                             dashRadius: 50,
                                             dashLength: 2,
                                             lineThickness: 2,
