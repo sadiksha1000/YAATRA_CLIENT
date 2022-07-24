@@ -1,16 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'login_screen.dart';
-
-import '../../../../core/config/size.dart';
+import 'package:yaatra_client/core/widgets/custom_progress_indicator.dart';
 import '../../../../core/widgets/auth_illustration_widget.dart';
 import '../../../../core/widgets/custom_button_widget.dart';
 import '../../../../core/widgets/custom_intro_header.dart';
 import '../../../../core/widgets/custom_passwordfield_widget.dart';
 import '../blocs/cubit/auth_cubit.dart';
+import 'login_screen.dart';
+import '../../../../../core/config/size.dart';
 
 class CreatePassword extends StatefulWidget {
   const CreatePassword({Key? key}) : super(key: key);
@@ -36,13 +33,13 @@ class _CreatePasswordState extends State<CreatePassword> {
           child: BlocListener<AuthCubit, AuthState>(
             listener: (context, state) {
               if (state.registerStatus == AuthStatus.success) {
-                Navigator.of(context)
-                    .pushReplacementNamed(LoginScreen.routeName);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text("You have successfully registered"),
                   ),
                 );
+                Navigator.of(context)
+                    .pushReplacementNamed(LoginScreen.routeName);
               } else if (state.registerStatus == AuthStatus.error) {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.errorMessage)));
@@ -51,10 +48,11 @@ class _CreatePasswordState extends State<CreatePassword> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                IntroHeader(
-                    size1: size(context).height * 0.03,
-                    introHeader: 'Create Password',
-                    introDesc: 'Create your new password'),
+                const IntroHeader(
+                  introHeader: 'Create Password',
+                  introDesc: 'Create your new password',
+                  size1: 0,
+                ),
                 Column(
                   children: [
                     const AuthIllustrationWidget(
@@ -65,6 +63,8 @@ class _CreatePasswordState extends State<CreatePassword> {
                       height: size(context).height * 0.04,
                     ),
                     CustomPasswordField(
+                      errorText: '',
+                      hintText: 'Enter your password',
                       icon: Icons.lock,
                       onChanged: (value) {
                         _registerCubit.passwordChanged(value);
@@ -72,10 +72,12 @@ class _CreatePasswordState extends State<CreatePassword> {
                     ),
                     SizedBox(height: size(context).height * 0.02),
                     CustomPasswordField(
+                      hintText: 'Confirm your password',
                       icon: Icons.lock,
                       onChanged: (value) {
                         _registerCubit.confirmPasswordChanged(value);
                       },
+                      errorText: '',
                     ),
                     StreamBuilder<Object>(
                         stream: _registerCubit.isPasswordValid,
@@ -96,7 +98,9 @@ class _CreatePasswordState extends State<CreatePassword> {
                           return BlocBuilder<AuthCubit, AuthState>(
                             builder: (context, state) {
                               if (state.registerStatus == AuthStatus.loading) {
-                                return const CircularProgressIndicator();
+                                return CustomProgressIndicator( onTap: (){
+                                  _registerCubit.cancelRegistration();
+                                },);
                               }
                               return CustomButton(
                                 disable: snapshot.hasData ? false : true,

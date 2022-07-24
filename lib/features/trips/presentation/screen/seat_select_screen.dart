@@ -4,13 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yaatra_client/core/utils/status.dart';
 import 'package:yaatra_client/core/widgets/custom_progress_indicator.dart';
 import 'package:yaatra_client/core/widgets/custom_snackbar.dart';
+import 'package:yaatra_client/core/widgets/shimmer.dart';
 import 'package:yaatra_client/features/app/presentation/blocs/app/app_bloc.dart';
-import 'package:yaatra_client/features/authentication/presentation/screens/register_screen.dart';
-import 'package:yaatra_client/features/passenger/booking/data/models/booking_session_failure_model.dart';
-import 'package:yaatra_client/features/passenger/booking/data/models/booking_session_success_model.dart';
 import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_cubit.dart';
 import 'package:yaatra_client/features/passenger/booking/presentation/cubit/booking_session_cubit.dart';
-import 'package:yaatra_client/features/trips/domain/entities/trip_seat.dart';
 import 'package:yaatra_client/features/trips/presentation/widgets/seat_widget.dart';
 import 'reservation_screen.dart';
 
@@ -179,31 +176,34 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
                               // buildWhen: (previous, current) =>
                               //     current.selectedTrip != previous.selectedTrip,
                               builder: (context, state) {
-                                return GridView.builder(
-                                  itemCount:
-                                      state.selectedTrip.allTripSeats.length,
-                                  padding: const EdgeInsets.all(10),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 5,
-                                    childAspectRatio: 1.5,
-                                    crossAxisSpacing: 0,
-                                    mainAxisSpacing: 10,
-                                  ),
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return state.selectedTrip
-                                                .allTripSeats[index] ==
-                                            null
-                                        ? Container()
-                                        : SeatWidget(
-                                            index: index,
-                                            onClicked: () {},
-                                            seat: state.selectedTrip
-                                                .allTripSeats[index],
-                                          );
-                                  },
-                                );
+                                return state.refreshSelectedTripStatus ==
+                                        Status.loading
+                                    ? const SeatShimmerWidget()
+                                    : GridView.builder(
+                                        itemCount: state
+                                            .selectedTrip.allTripSeats.length,
+                                        padding: const EdgeInsets.all(10),
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 5,
+                                          childAspectRatio: 1.5,
+                                          crossAxisSpacing: 0,
+                                          mainAxisSpacing: 10,
+                                        ),
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return state.selectedTrip
+                                                      .allTripSeats[index] ==
+                                                  null
+                                              ? Container()
+                                              : SeatWidget(
+                                                  index: index,
+                                                  onClicked: () {},
+                                                  seat: state.selectedTrip
+                                                      .allTripSeats[index],
+                                                );
+                                        },
+                                      );
                               },
                             ),
                           ),
@@ -548,6 +548,42 @@ class _SelectSeatScreenState extends State<SelectSeatScreen>
           ],
         ),
       ),
+    );
+  }
+}
+
+class SeatShimmerWidget extends StatelessWidget {
+  const SeatShimmerWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      itemCount: 30,
+      padding: const EdgeInsets.all(10),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 5,
+        childAspectRatio: 1.5,
+        crossAxisSpacing: 0,
+        mainAxisSpacing: 10,
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Shimmer.fromColors(
+            baseColor: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+            highlightColor: Colors.grey.withOpacity(0.1),
+            enabled: true,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(size(context).width * 0.01),
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

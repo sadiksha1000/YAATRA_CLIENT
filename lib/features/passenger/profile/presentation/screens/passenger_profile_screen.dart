@@ -1,11 +1,9 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yaatra_client/core/server/server.dart';
 import 'package:yaatra_client/core/widgets/custom_popup_message.dart';
 import 'package:yaatra_client/features/passenger/profile/domain/enities/passenger_profile.dart';
 import 'package:yaatra_client/features/passenger/profile/presentation/cubit/passenger_profile_cubit.dart';
-import 'package:yaatra_client/features/shared/image/domain/entities/upload_image.dart';
 import 'package:yaatra_client/features/shared/image/presentation/image_cubit/image_cubit.dart';
 
 import '../../../../../core/config/size.dart';

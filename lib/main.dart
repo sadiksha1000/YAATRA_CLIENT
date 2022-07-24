@@ -42,6 +42,7 @@ import 'package:yaatra_client/features/ticket/fetch_ticket/domain/usecases/fetch
 import 'package:yaatra_client/features/trips/domain/usecases/fetch_trip_byid_usecase.dart';
 
 import 'core/config/dark_theme.dart';
+import 'core/config/routes.dart';
 import 'features/authentication/data/repositories/user_repository_impl.dart';
 import 'features/authentication/domain/repositories/user_repository.dart';
 import 'features/authentication/domain/usecases/login_user_usecase.dart';
@@ -137,7 +138,7 @@ void main() async {
 
     // usecase
     RegisterUserUseCase registerUserUseCase = RegisterUserUseCase(
-      userRepository: userRepository,
+      userRepository,
     );
     SendOTPToPhoneUseCase sendOTPToPhoneUseCase =
         SendOTPToPhoneUseCase(userRepository);
@@ -178,11 +179,12 @@ void main() async {
     AuthCubit registerCubit = AuthCubit(
       registerUseCase: registerUserUseCase,
       sendOTPUseCase: sendOTPToPhoneUseCase,
-      inputConverter: inputConverter,
-      inputValidator: inputValidator,
+      inputCon: inputConverter,
+      inputValid: inputValidator,
       loginUseCase: loginUserUseCase,
       refreshCurrentUser: refreshCurrentUserUseCase,
       switchUserRole: switchUserRoleUseCase,
+      networkIn: networkInfo,
     );
 
     AppBloc appBloc = AppBloc(authRepository: userRepository);
@@ -348,7 +350,11 @@ class AppView extends StatelessWidget {
             localizationsDelegates: const [
               KhaltiLocalizations.delegate,
             ],
-            home: const LoginScreen(),
+            home: BlocBuilder<AppBloc, AppState>(
+        builder: (context, state) {
+          return onGenerateAppScreen(state, context);
+        },
+      ),
           )),
     );
   }

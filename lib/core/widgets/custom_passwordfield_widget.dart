@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../core/config/size.dart';
 
@@ -6,11 +7,23 @@ class CustomPasswordField extends StatefulWidget {
   final IconData icon;
   final Color? iconColor;
   final Function onChanged;
+  final String hintText;
+  final String errorText;
+  final String? initialValue;
+  final List<TextInputFormatter>? inputFormatters;
+  int? maxLength = 10;
+  TextInputType? keyboardType = TextInputType.text;
   CustomPasswordField({
     Key? key,
     required this.icon,
     required this.onChanged,
     this.iconColor,
+    required this.hintText,
+    required this.errorText,
+    this.keyboardType,
+    this.maxLength,
+    this.inputFormatters,
+    this.initialValue,  
   }) : super(key: key);
 
   @override
@@ -38,7 +51,15 @@ class _CustomPasswordFieldState extends State<CustomPasswordField> {
       child: TextFormField(
         enableSuggestions: false,
         obscureText: showPassword,
+        initialValue: widget.initialValue,
+
+        inputFormatters: widget.inputFormatters,
+        keyboardType: widget.keyboardType,
+        maxLength: widget.maxLength,
         decoration: InputDecoration(
+          
+            hintText: widget.hintText,
+            hintStyle: Theme.of(context).textTheme.subtitle2,
             prefixIcon: Icon(
               widget.icon,
               size: size(context).height * 0.025,

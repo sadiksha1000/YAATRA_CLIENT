@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yaatra_client/features/authentication/presentation/screens/create_password_screen.dart';
 import 'package:yaatra_client/features/authentication/presentation/screens/otp_verification_screen.dart';
+import 'package:yaatra_client/features/passenger/applyasagent/presentation/screens/agent_dashboard_screen.dart';
 import 'package:yaatra_client/features/passenger/applyasagent/presentation/screens/apply_as_agent_screen.dart';
 import 'package:yaatra_client/features/ticket/fetch_ticket/presentation/screens/my_trips_screen.dart';
 import 'package:yaatra_client/features/ticket/fetch_ticket/presentation/screens/ticket_details_screen.dart';
@@ -60,6 +61,10 @@ class RouteGenerator {
       case ApplyAsAgentScreen.routeName:
         return MaterialPageRoute(
           builder: (_) => ApplyAsAgentScreen(),
+        );
+      case AgentDashboardScreen.routeName:
+        return MaterialPageRoute(
+          builder: (_) => AgentDashboardScreen(),
         );
 
       default:

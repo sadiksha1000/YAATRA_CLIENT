@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 
 class User extends Equatable {
   final String uid;
   final String phone;
-  final bool isPassenger;
   final bool isAgent;
+  final bool isPassenger;
   final String activeRole;
   final String accessToken;
   final String message;
@@ -12,32 +14,41 @@ class User extends Equatable {
   const User({
     required this.uid,
     required this.phone,
-    required this.isPassenger,
     required this.isAgent,
+    required this.isPassenger,
     required this.activeRole,
     required this.accessToken,
     required this.message,
   });
 
   static const empty = User(
-    uid: '',
-    phone: '',
-    isPassenger: false,
-    isAgent: false,
-    activeRole: '',
-    accessToken: '',
-    message: '',
-  );
+      uid: '',
+      phone: '',
+      accessToken: '',
+      activeRole: '',
+      isPassenger: false,
+      isAgent: false,
+      message: '');
 
   bool get isEmpty => this == User.empty;
   bool get isNotEmpty => this != User.empty;
+
+  @override
+  List<Object?> get props => [
+        uid,
+        phone,
+        isAgent,
+        isPassenger,
+        activeRole,
+        accessToken,
+      ];
 
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
       'phone': phone,
-      'isPassenger': isPassenger,
       'isAgent': isAgent,
+      'isPassenger': isPassenger,
       'activeRole': activeRole,
       'accessToken': accessToken,
       'message': message,
@@ -46,36 +57,28 @@ class User extends Equatable {
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      uid: map['data']['_id'] ?? '',
+      uid: map['data']['uid'] ?? '',
       phone: map['data']['phone'] ?? '',
-      isPassenger: map['data']['isPassenger'] ?? false,
       isAgent: map['data']['isAgent'] ?? false,
-      activeRole: map['activeRole'] ?? '',
+      isPassenger: map['data']['isPassenger'] ?? false,
+      activeRole: map['data']['activeRole'] ?? '',
       accessToken: map['accessToken'] ?? '',
       message: map['message'] ?? '',
     );
   }
-
   factory User.fromLocalMap(Map<String, dynamic> map) {
     return User(
       uid: map['uid'] ?? '',
       phone: map['phone'] ?? '',
-      isPassenger: map['isPassenger'] ?? false,
       isAgent: map['isAgent'] ?? false,
+      isPassenger: map['isPassenger'] ?? false,
       activeRole: map['activeRole'] ?? '',
       accessToken: map['accessToken'] ?? '',
       message: map['message'] ?? '',
     );
   }
 
-  @override
-  List<Object> get props => [
-        uid,
-        phone,
-        isPassenger,
-        isAgent,
-        activeRole,
-        accessToken,
-        message,
-      ];
+  String toJson() => json.encode(toMap());
+
+  factory User.fromJson(String source) => User.fromMap(json.decode(source));
 }

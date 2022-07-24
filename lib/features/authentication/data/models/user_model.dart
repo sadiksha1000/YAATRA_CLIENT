@@ -6,30 +6,29 @@ class UserModel extends User {
   const UserModel({
     required String uid,
     required String phone,
-    required bool isPassenger,
     required bool isAgent,
+    required bool isPassenger,
     required String activeRole,
     required String accessToken,
     required String message,
   }) : super(
           uid: uid,
           phone: phone,
-          isPassenger: isPassenger,
           isAgent: isAgent,
+          isPassenger: isPassenger,
           activeRole: activeRole,
           accessToken: accessToken,
           message: message,
         );
 
   static const empty = UserModel(
-    uid: '',
-    phone: '',
-    isPassenger: false,
-    isAgent: false,
-    activeRole: '',
-    accessToken: '',
-    message: '',
-  );
+      uid: '',
+      phone: '',
+      accessToken: '',
+      activeRole: '',
+      isPassenger: false,
+      isAgent: false,
+      message: '');
 
   bool get isEmpty => this == UserModel.empty;
   bool get isNotEmpty => this != UserModel.empty;
@@ -38,40 +37,46 @@ class UserModel extends User {
     return {
       'uid': uid,
       'phone': phone,
-      'isPassenger': isPassenger,
       'isAgent': isAgent,
+      'isPassenger': isPassenger,
       'activeRole': activeRole,
       'accessToken': accessToken,
       'message': message,
     };
   }
 
-  factory UserModel.fromMap(Map<String, dynamic> map) {
+  /// Used to map remote data source
+  ///
+  ///
+  /// {success: true, message: "User logged in successfully", data: {_id: "fkjshfjh", isAgent: false}}
+  factory UserModel.fromMap(Map<String, dynamic> map, {String? message}) {
     return UserModel(
       uid: map['_id'] ?? '',
       phone: map['phone'] ?? '',
-      isPassenger: map['isPassenger'] ?? false,
       isAgent: map['isAgent'] ?? false,
+      isPassenger: map['isPassenger'] ?? false,
       activeRole: map['activeRole'] ?? '',
       accessToken: map['accessToken'] ?? '',
-      message: map['message'] ?? '',
+      message: message ?? '',
     );
   }
 
+  /// Used to map state data
+  /// {uid:'sdfisj', phone:'98934857'}
   factory UserModel.fromLocalMap(Map<String, dynamic> map) {
     return UserModel(
       uid: map['uid'] ?? '',
       phone: map['phone'] ?? '',
-      isPassenger: map['isPassenger'] ?? false,
       isAgent: map['isAgent'] ?? false,
+      isPassenger: map['isPassenger'] ?? false,
       activeRole: map['activeRole'] ?? '',
       accessToken: map['accessToken'] ?? '',
       message: map['message'] ?? '',
     );
   }
 
+  @override
   String toJson() => json.encode(toMap());
 
-  // factory UserModel.fromJson(String source) =>
-  //     UserModel.fromMap(json.decode(source));
+
 }

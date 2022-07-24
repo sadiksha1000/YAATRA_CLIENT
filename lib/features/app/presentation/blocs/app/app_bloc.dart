@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:path_provider/path_provider.dart';
+import '../../../../authentication/presentation/blocs/cubit/auth_cubit.dart';
 import '../../../../authentication/domain/repositories/user_repository.dart';
 
 import '../../../../authentication/domain/entities/user.dart';
@@ -15,7 +14,6 @@ part 'app_state.dart';
 class AppBloc extends Bloc<AppEvent, AppState> with HydratedMixin {
   final UserRepository _authRepository;
   StreamSubscription<User>? _userSubscription;
-
   AppBloc({required UserRepository authRepository})
       : _authRepository = authRepository,
         super(authRepository.currentUser.isNotEmpty
@@ -23,20 +21,24 @@ class AppBloc extends Bloc<AppEvent, AppState> with HydratedMixin {
             : const AppState.unauthenticated()) {
     on<AppUserChanged>(_onUserChanged);
     on<AppLogoutRequested>(_onLogoutRequested);
+
+
   }
 
   void _onUserChanged(AppUserChanged event, Emitter<AppState> emit) {
     // emit(const AppState.loading());
-    print("before logout ${event.user}");
     emit(
       event.user.isNotEmpty
           ? AppState.authenticated(event.user)
           : const AppState.unauthenticated(),
     );
-    print("after logout $state");
   }
 
-  void _onLogoutRequested(AppLogoutRequested event, Emitter<AppState> emit) {
+  void _onLogoutRequested(
+      AppLogoutRequested event, Emitter<AppState> emit) async {
+    // delete hydrated storage
+    await HydratedStorage.hive.deleteBoxFromDisk('hydrated_storage');
+
     emit(const AppState.unauthenticated());
     unawaited(_authRepository.logout(state.user.uid));
   }
@@ -53,7 +55,7 @@ class AppBloc extends Bloc<AppEvent, AppState> with HydratedMixin {
       if (state.status == AppStatus.authenticated) {}
       return AppState.fromMap(json);
     } catch (e) {
-      print("this is fromjson app bloc error $e");
+      rethrow;
     }
   }
 
@@ -63,7 +65,7 @@ class AppBloc extends Bloc<AppEvent, AppState> with HydratedMixin {
       if (state.status == AppStatus.loading) {}
       return state.toMap();
     } catch (e) {
-      print("this is toJson app bloc error $e");
+      rethrow;
     }
   }
 }

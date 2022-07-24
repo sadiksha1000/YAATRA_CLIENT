@@ -7,20 +7,20 @@ class AppState extends Equatable {
   final bool isPassenger;
   final bool isAgent;
   final String activeRole;
-  final String accessToken;
   final User user;
   final String uid;
   final String phone;
+  final String accessToken;
 
   const AppState._({
     required this.status,
+    this.user = User.empty,
     this.isPassenger = false,
     this.isAgent = false,
-    this.activeRole = 'passenger',
+    this.activeRole = 'conductor',
     this.accessToken = '',
-    this.user = User.empty,
-    this.uid = '',
     this.phone = '',
+    this.uid = '',
   });
 
   AppState.authenticated(User user)
@@ -45,8 +45,7 @@ class AppState extends Equatable {
         );
 
   @override
-  // TODO: implement props
-  List<Object?> get props => [status, user];
+  List<Object> get props => [status, user];
 
   Map<String, dynamic> toMap() {
     return {

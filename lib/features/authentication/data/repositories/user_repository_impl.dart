@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import '../../domain/entities/user.dart';
 
 import '../../../../../core/errors/exception.dart';
 import '../../../../../core/errors/failure.dart';
@@ -9,10 +8,12 @@ import '../datasources/user_remote_datasource.dart';
 import '../models/user_model.dart';
 
 class UserRepositoryImpl implements UserRepository {
+  // final UserLocalDataSource localDataSource;
   final UserRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;
 
   UserRepositoryImpl({
+    // required this.localDataSource,
     required this.remoteDataSource,
     required this.networkInfo,
   });
@@ -26,15 +27,16 @@ class UserRepositoryImpl implements UserRepository {
     if (await networkInfo.isConnected) {
       try {
         final userDetails = await remoteDataSource.registerUser(
-          phone: phone,
-          password: password,
-        );
+            phone: phone, password: password);
+        // perform caching only when it gets things from server successfully
+        // localDataSource.cacheUserDetails(userDetails);
+
         return Right(userDetails);
       } on ServerFailure catch (e) {
-        return Left(e);
+        throw Left(e);
       }
     } else {
-      return Left(CacheFailure(properties: []));
+      throw Left(CacheFailure(properties: []));
     }
   }
 
@@ -46,30 +48,28 @@ class UserRepositoryImpl implements UserRepository {
         // perform caching only when it gets things from server successfully
         return Right(otp);
       } on ServerException {
-        return Left(ServerFailure(properties: []));
+        throw Left(ServerFailure(properties: []));
       }
     } else {
-      return Left(CacheFailure(properties: []));
+      throw Left(CacheFailure(properties: []));
     }
   }
 
   @override
-  Future<Either<Failure, User>> loginUser(
+  Future<Either<Failure, UserModel>> loginUser(
       {required String phone, required String password}) async {
-
     if (await networkInfo.isConnected) {
       try {
         final userDetails =
             await remoteDataSource.loginUser(phone: phone, password: password);
         currentUser = userDetails;
         // perform caching only when it gets things from server successfully
-        print("CurrentUserDetails$currentUser");
         return Right(userDetails);
       } on ServerFailure catch (e) {
         return Left(e);
       }
     } else {
-      return Left(CacheFailure(properties: []));
+      throw Left(CacheFailure(properties: []));
     }
   }
 
@@ -108,8 +108,13 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<void>? logout(String uid) {
-    // TODO: implement logout
-    throw UnimplementedError();
+  Future<void>? logout(String uid) async {
+    try {
+      // final userDetails = await remoteDataSource.logout(uid: lastUser.uid);
+      // perform caching only when it gets things from server successfully
+
+    } catch (e) {
+      rethrow;
+    }
   }
 }

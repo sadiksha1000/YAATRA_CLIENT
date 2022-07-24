@@ -13,6 +13,6 @@ class SwitchUserRoleUseCase {
     required String uid,
     required String activeRole,
   }) async {
-    return userRepository.switchUser(uid: uid, activeRole: activeRole);
-  }
+    return userRepository.switchUser(uid: uid, activeRole:activeRole);
+  } 
 }

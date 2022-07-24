@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yaatra_client/core/config/custom_icon_icons.dart';
 import 'package:yaatra_client/core/widgets/custom_snackbar.dart';
 import 'package:yaatra_client/features/passenger/booking/data/models/passenger_details.dart';
+import 'package:yaatra_client/features/passenger/profile/presentation/cubit/passenger_profile_cubit.dart';
 import 'package:yaatra_client/features/trips/domain/entities/trip_seat.dart';
 
 import '../../../../core/config/size.dart';
@@ -27,6 +28,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
   PassengerDetailsModel _contactPersonDetails = PassengerDetailsModel.empty;
   @override
   void initState() {
+    PassengerProfileCubit _passengerProfileCubit =
+        context.read<PassengerProfileCubit>();
     BookingCubit bookingCubit = BlocProvider.of<BookingCubit>(context);
     _passengerDetails = List.generate(
       bookingCubit.state.selectedSeatsByUser.length,
@@ -37,6 +40,12 @@ class _ReservationScreenState extends State<ReservationScreen> {
         seat: bookingCubit.state.selectedSeatsByUser[index],
       ),
     );
+    _contactPersonDetails = PassengerDetailsModel(
+      contact: _passengerProfileCubit.state.currentCreatedProfile.phone,
+      name: _passengerProfileCubit.state.currentCreatedProfile.name,
+      email: '',
+      seat: bookingCubit.state.selectedSeatsByUser[0],
+    );
     super.initState();
   }
 
@@ -44,6 +53,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
   final ScrollPhysics _scrollPhysics = const ScrollPhysics();
   @override
   Widget build(BuildContext context) {
+    PassengerProfileCubit _passengerProfileCubit =
+        context.read<PassengerProfileCubit>();
     return Scaffold(
       appBar: customAppBar(title: 'Passenger Details', context: context),
       body: SingleChildScrollView(
@@ -56,13 +67,81 @@ class _ReservationScreenState extends State<ReservationScreen> {
             BookingSessionTimerWidget(),
             Container(
               margin: EdgeInsets.all(size(context).width * 0.04),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Contact Person Details: ",
+                    style: TextStyle(
+                      fontSize: size(context).height * 0.018,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    "Booking details will be sent to the below contact person",
+                    style: TextStyle(
+                        fontSize: size(context).height * 0.014,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.secondary),
+                  ),
+                  SizedBox(
+                    height: size(context).height * 0.02,
+                  ),
+                  CustomTextFormField(
+                      initialValue: _passengerProfileCubit
+                          .state.currentCreatedProfile.name,
+                      icon: Icons.person,
+                      onChanged: (value) {
+                        _contactPersonDetails = _contactPersonDetails.copyWith(
+                          name: value,
+                        );
+                      },
+                      hintText: "Full Name",
+                      errorText: ""),
+                  SizedBox(
+                    height: size(context).height * 0.012,
+                  ),
+                  CustomTextFormField(
+                      initialValue: _passengerProfileCubit
+                          .state.currentCreatedProfile.phone,
+                      icon: Icons.phone,
+                      onChanged: (value) {
+                        _contactPersonDetails = _contactPersonDetails.copyWith(
+                          contact: value,
+                        );
+                      },
+                      hintText: "Phone Number",
+                      errorText: ""),
+                  SizedBox(
+                    height: size(context).height * 0.012,
+                  ),
+                  CustomTextFormField(
+                      icon: Icons.email,
+                      onChanged: (value) {
+                        _contactPersonDetails = _contactPersonDetails.copyWith(
+                          email: value,
+                        );
+                      },
+                      hintText: "Email address",
+                      errorText: ""),
+                ],
+              ),
+            ),
+            Divider(
+              height: 2,
+              indent: size(context).width * 0.06,
+              endIndent: size(context).width * 0.06,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            Container(
+              margin: EdgeInsets.all(size(context).width * 0.04),
               child: ListView(
                 shrinkWrap: true,
                 children: [
                   Row(
                     children: [
                       Text(
-                        "Enter Passenger Details:",
+                        "Enter Passenger Details(Optional):",
                         style: TextStyle(
                             fontSize: size(context).height * 0.018,
                             fontWeight: FontWeight.w500),
@@ -108,106 +187,35 @@ class _ReservationScreenState extends State<ReservationScreen> {
                 ],
               ),
             ),
-            Divider(
-              height: 2,
-              indent: size(context).width * 0.06,
-              endIndent: size(context).width * 0.06,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            Container(
-              margin: EdgeInsets.all(size(context).width * 0.04),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Contact Person Details: ",
-                    style: TextStyle(
-                      fontSize: size(context).height * 0.018,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    "Booking details will be sent to the below contact person",
-                    style: TextStyle(
-                        fontSize: size(context).height * 0.014,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.secondary),
-                  ),
-                  SizedBox(
-                    height: size(context).height * 0.02,
-                  ),
-                  CustomTextFormField(
-                      icon: Icons.person,
-                      onChanged: (value) {
-                        _contactPersonDetails = _contactPersonDetails.copyWith(
-                          name: value,
-                        );
-                      },
-                      hintText: "Contact Name",
-                      errorText: ""),
-                  SizedBox(
-                    height: size(context).height * 0.012,
-                  ),
-                  CustomTextFormField(
-                      icon: Icons.phone,
-                      onChanged: (value) {
-                        _contactPersonDetails = _contactPersonDetails.copyWith(
-                          contact: value,
-                        );
-                      },
-                      hintText: "Contact Number",
-                      errorText: ""),
-                  SizedBox(
-                    height: size(context).height * 0.012,
-                  ),
-                  CustomTextFormField(
-                      icon: Icons.email,
-                      onChanged: (value) {
-                        _contactPersonDetails = _contactPersonDetails.copyWith(
-                          email: value,
-                        );
-                      },
-                      hintText: "Email address",
-                      errorText: ""),
-                  SizedBox(
-                    height: size(context).height * 0.05,
-                  ),
-                  Center(
-                    child: SecondaryCustomButton(
-                        onPressed: () {
-                          if (_contactPersonDetails.name.isNotEmpty &&
-                                  _contactPersonDetails.contact.isNotEmpty ||
-                              _contactPersonDetails.email.isNotEmpty) {
-                            // push
-                            context
-                                .read<BookingCubit>()
-                                .changePassengerAndContactDetails(
-                                    passengerDetails: _passengerDetails,
-                                    contactPersonDetails:
-                                        _contactPersonDetails);
-                            Navigator.of(context)
-                                .pushNamed(ProceedToPay.routeName);
-                          } else {
-                            customSnackbar(
-                                context: context,
-                                isError: true,
-                                message: "Please fill all the details");
-                          }
-                        },
-                        label: "Proceed",
-                        disable: false),
-                  )
-                ],
-              ),
-            ),
+            Center(
+              child: SecondaryCustomButton(
+                  onPressed: () {
+                    if (_contactPersonDetails.name.isNotEmpty &&
+                            _contactPersonDetails.contact.isNotEmpty ||
+                        _contactPersonDetails.email.isNotEmpty) {
+                      // push
+                      context
+                          .read<BookingCubit>()
+                          .changePassengerAndContactDetails(
+                              passengerDetails: _passengerDetails,
+                              contactPersonDetails: _contactPersonDetails);
+                      Navigator.of(context).pushNamed(ProceedToPay.routeName);
+                    } else {
+                      customSnackbar(
+                          context: context,
+                          isError: true,
+                          message: "Contact details is required");
+                    }
+                  },
+                  label: "Proceed",
+                  disable: false),
+            )
           ],
         ),
       ),
     );
   }
 }
-
-
 
 class PassengerDetailsWidget extends StatelessWidget {
   final Function onChangedName;
@@ -257,7 +265,7 @@ class PassengerDetailsWidget extends StatelessWidget {
                   onChanged: (String value) {
                     onChangedContact(value);
                   },
-                  hintText: "Contact Number",
+                  hintText: "Phone Number",
                   errorText: "",
                 )
               ],
