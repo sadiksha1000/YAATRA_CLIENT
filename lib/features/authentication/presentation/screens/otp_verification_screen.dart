@@ -1,8 +1,10 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yaatra_client/core/widgets/custom_progress_indicator.dart';
 
 import '../../../../../core/config/size.dart';
+import '../../../../core/utils/status.dart';
 import '../../../../core/widgets/auth_illustration_widget.dart';
 import '../../../../core/widgets/countdown_timer.dart';
 import '../../../../core/widgets/custom_button_widget.dart';
@@ -57,6 +59,7 @@ class OTPVerificationScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       OTPNumberWidget(
+                        first: true,
                         onChanged: (value) {
                           _otpList.clear();
                           _otpList.insert(0, value);
@@ -93,6 +96,7 @@ class OTPVerificationScreen extends StatelessWidget {
                         },
                       ),
                       OTPNumberWidget(
+                        last: true,
                         onChanged: (value) {
                           _otpList.insert(5, value);
                           final listOTP = _otpList.join();
@@ -108,19 +112,17 @@ class OTPVerificationScreen extends StatelessWidget {
                 StreamBuilder<Object>(
                     stream: _registerCubit.isOTPValid,
                     builder: (context, snapshot) {
-                      return CustomButton(
-                        disable: snapshot.hasData ? false : true,
-                        onPressed: () {
-                          bool isVerified = _registerCubit.otpVerified();
-                          if (isVerified) {
+                      return BlocConsumer<AuthCubit, AuthState>(
+                        listener: (context, state) {
+                          if (state.verifyOtpStatus == Status.success) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text("OTP Verified"),
+                                content: Text("OTP Verified Successfully"),
                               ),
                             );
                             Navigator.of(context)
                                 .pushReplacementNamed(CreatePassword.routeName);
-                          } else {
+                          } else if (state.verifyOtpStatus == Status.error) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 shape: RoundedRectangleBorder(
@@ -141,7 +143,21 @@ class OTPVerificationScreen extends StatelessWidget {
                             );
                           }
                         },
-                        label: 'Verify',
+                        builder: (context, state) {
+                          return state.verifyOtpStatus == Status.loading
+                              ? CustomProgressIndicator(onTap: () {
+                                  context
+                                      .read<AuthCubit>()
+                                      .cancelRegistration();
+                                })
+                              : CustomButton(
+                                  disable: snapshot.hasData ? false : true,
+                                  onPressed: () {
+                                    _registerCubit.otpVerified();
+                                  },
+                                  label: 'Verify',
+                                );
+                        },
                       );
                     }),
                 CountdownTimer(
@@ -162,8 +178,15 @@ class OTPVerificationScreen extends StatelessWidget {
 }
 
 class OTPNumberWidget extends StatelessWidget {
+  final bool first;
+  final bool last;
   final Function onChanged;
-  const OTPNumberWidget({Key? key, required this.onChanged}) : super(key: key);
+  const OTPNumberWidget(
+      {Key? key,
+      required this.onChanged,
+      this.first = false,
+      this.last = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -179,6 +202,10 @@ class OTPNumberWidget extends StatelessWidget {
           FilteringTextInputFormatter.allow(RegExp('[0-9]')),
         ],
         decoration: InputDecoration(
+          hintText: "0",
+          hintStyle: Theme.of(context).textTheme.headline3?.copyWith(
+              color: Colors.grey.withOpacity(0.5),
+              fontWeight: FontWeight.normal),
           contentPadding: const EdgeInsets.all(0),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(size(context).width * 0.013),
@@ -191,6 +218,11 @@ class OTPNumberWidget extends StatelessWidget {
             {
               onChanged(value),
               FocusScope.of(context).nextFocus(),
+            }
+          else if (value.isEmpty)
+            {
+              onChanged(value),
+              FocusScope.of(context).previousFocus(),
             }
         },
       ),

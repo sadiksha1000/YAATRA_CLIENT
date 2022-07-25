@@ -23,7 +23,7 @@ class CustomPasswordField extends StatefulWidget {
     this.keyboardType,
     this.maxLength,
     this.inputFormatters,
-    this.initialValue,  
+    this.initialValue,
   }) : super(key: key);
 
   @override
@@ -52,12 +52,14 @@ class _CustomPasswordFieldState extends State<CustomPasswordField> {
         enableSuggestions: false,
         obscureText: showPassword,
         initialValue: widget.initialValue,
-
         inputFormatters: widget.inputFormatters,
         keyboardType: widget.keyboardType,
         maxLength: widget.maxLength,
         decoration: InputDecoration(
-          
+            errorText: widget.errorText.isNotEmpty ? widget.errorText : "",
+            errorMaxLines: 1,
+            errorStyle:
+                TextStyle(fontSize: size(context).width * 0.023, height: 0.056),
             hintText: widget.hintText,
             hintStyle: Theme.of(context).textTheme.subtitle2,
             prefixIcon: Icon(

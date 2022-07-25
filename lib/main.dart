@@ -16,6 +16,7 @@ import 'package:yaatra_client/features/authentication/domain/usecases/refresh_cu
 import 'package:yaatra_client/features/authentication/domain/usecases/register_user_usecase.dart';
 import 'package:yaatra_client/features/authentication/domain/usecases/send_otp_to_phone_usecase.dart';
 import 'package:yaatra_client/features/authentication/domain/usecases/switch_user_role_usecase.dart';
+import 'package:yaatra_client/features/authentication/domain/usecases/verify_sent_otp_to_phone_usecase.dart';
 import 'package:yaatra_client/features/authentication/presentation/blocs/cubit/auth_cubit.dart';
 import 'package:yaatra_client/features/passenger/booking/data/datasources/booking_remote_datasource.dart';
 import 'package:yaatra_client/features/passenger/booking/domain/repositories/booking_repository.dart';
@@ -142,6 +143,8 @@ void main() async {
     );
     SendOTPToPhoneUseCase sendOTPToPhoneUseCase =
         SendOTPToPhoneUseCase(userRepository);
+    VerifySentOTPToPhoneUseCase verifySentOTPToPhoneUseCase =
+        VerifySentOTPToPhoneUseCase(userRepository);
     LoginUserUseCase loginUserUseCase = LoginUserUseCase(userRepository);
     FetchAllBusesUseCase fetchAllBusesUseCase =
         FetchAllBusesUseCase(busRepository);
@@ -179,6 +182,7 @@ void main() async {
     AuthCubit registerCubit = AuthCubit(
       registerUseCase: registerUserUseCase,
       sendOTPUseCase: sendOTPToPhoneUseCase,
+      verifyOtpUseCase: verifySentOTPToPhoneUseCase,
       inputCon: inputConverter,
       inputValid: inputValidator,
       loginUseCase: loginUserUseCase,
@@ -351,11 +355,22 @@ class AppView extends StatelessWidget {
               KhaltiLocalizations.delegate,
             ],
             home: BlocBuilder<AppBloc, AppState>(
-        builder: (context, state) {
-          return onGenerateAppScreen(state, context);
-        },
-      ),
+              builder: (context, state) {
+                return onGenerateAppScreen(state, context);
+              },
+            ),
           )),
     );
   }
 }
+
+
+// fix registtration mobile check
+// validation for registration
+
+// tickets seats show
+
+// remove tickets
+
+// remove homepage and place banner
+

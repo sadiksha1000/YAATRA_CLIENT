@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:yaatra_client/features/authentication/data/models/otp_response_model.dart';
 
 import '../../../../../core/errors/exception.dart';
 import '../../../../../core/server/server.dart';
@@ -41,7 +43,15 @@ abstract class UserRemoteDataSource {
     throw UnimplementedError();
   }
 
-  Future<int> sendOTPToPhone(String phone) {
+  /// Calls the http://localhost:3001/user/switchRole end point.
+  ///
+  /// Throws a [ServerException] for all error codes
+  Future<OtpResponseModel> verifySentOTPToPhone(
+      {required String phone, required String hash, required String otp}) {
+    throw UnimplementedError();
+  }
+
+  Future<OtpResponseModel> sendOTPToPhone(String phone) {
     throw UnimplementedError();
   }
 
@@ -86,8 +96,34 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<int> sendOTPToPhone(String phone) async {
-    return 123456;
+  Future<OtpResponseModel> sendOTPToPhone(String phone) async {
+    var sendOtpUrl = '$serverUrl/otp/check-phone-send-otp';
+    try {
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final body = jsonEncode({
+        'phone': '+977$phone',
+      });
+      final response = await client.post(
+        Uri.parse(sendOtpUrl),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        var decodedResponse = ResponseModel.fromJson(response.body);
+        return OtpResponseModel.fromMap(decodedResponse.data);
+      } else {
+        throw ServerFailure.fromJson(response.body);
+      }
+    } on SocketException {
+      throw ServerFailure(
+        properties: [],
+        message:
+            "There is some problem connecting with server, please try again later",
+      );
+    }
   }
 
   @override
@@ -185,6 +221,42 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       }
     } on ServerFailure catch (e) {
       throw ServerFailure(properties: [], message: e.message);
+    }
+  }
+
+  @override
+  Future<OtpResponseModel> verifySentOTPToPhone(
+      {required String phone,
+      required String hash,
+      required String otp}) async {
+    var sendOtpUrl = '$serverUrl/otp/verify';
+    try {
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final body = jsonEncode({
+        'phone': '+977$phone',
+        'hash': hash,
+        'otp': otp,
+      });
+      final response = await client.post(
+        Uri.parse(sendOtpUrl),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        var decodedResponse = ResponseModel.fromJson(response.body);
+        return OtpResponseModel.fromMap(decodedResponse.data);
+      } else {
+        throw ServerFailure.fromJson(response.body);
+      }
+    } on SocketException {
+      throw ServerFailure(
+        properties: [],
+        message:
+            "There is some problem connecting with server, please try again later",
+      );
     }
   }
 }

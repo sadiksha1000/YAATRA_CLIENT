@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:yaatra_client/features/authentication/data/models/otp_response_model.dart';
 
 import '../../../../../core/errors/failure.dart';
 import '../entities/user.dart';
@@ -6,8 +7,15 @@ import '../entities/user.dart';
 class UserRepository {
   var currentUser = User.empty;
 
-  Future<Either<Failure, int?>> sendOTPToPhone(String phone) async {
-    return const Right(1);
+  Future<Either<Failure, OtpResponseModel>> sendOTPToPhone(String phone) async {
+    return const Right(OtpResponseModel.empty);
+  }
+
+  Future<Either<Failure, OtpResponseModel>> verifySentOTPToPhone(
+      {required String phone,
+      required String hash,
+      required String otp}) async {
+    return const Right(OtpResponseModel.empty);
   }
 
   Future<Either<Failure, User>> registerUser(

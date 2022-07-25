@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yaatra_client/core/widgets/custom_passwordfield_widget.dart';
+import 'package:yaatra_client/core/widgets/custom_progress_indicator.dart';
 import 'package:yaatra_client/features/passenger/applyasagent/presentation/screens/agent_dashboard_screen.dart';
 import 'package:yaatra_client/features/passenger/dashboard/presentation/screens/passenger_dashboard_screen.dart';
 import '../../../app/presentation/blocs/app/app_bloc.dart';
@@ -110,12 +111,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: size(context).height * 0.02,
                 ),
-                CustomPasswordField(
-                  errorText: '',
-                  hintText: "Password",
-                  icon: Icons.password,
-                  onChanged: _authCubit.passwordChanged,
-                ),
+                StreamBuilder<Object>(
+                    stream: _authCubit.isPasswordValid,
+                    builder: (context, snapshot) {
+                      return CustomPasswordField(
+                        errorText: '',
+
+                        // snapshot.hasError ? snapshot.error.toString() : '',
+                        hintText: "Password",
+                        icon: Icons.password,
+                        onChanged: _authCubit.passwordChanged,
+                      );
+                    }),
+
                 SizedBox(
                   height: size(context).height * 0.01,
                 ),
@@ -143,7 +151,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     return BlocBuilder<AuthCubit, AuthState>(
                       builder: (context, state) {
                         if (state.loginStatus == AuthStatus.loading) {
-                          return const CircularProgressIndicator();
+                          return CustomProgressIndicator(
+                            onTap: () {
+                              _authCubit.cancelLogin();
+                            },
+                          );
                         }
                         return CustomButton(
                           disable: snapshot.hasData ? false : true,

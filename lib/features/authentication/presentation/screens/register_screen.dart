@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yaatra_client/core/widgets/custom_progress_indicator.dart';
 import '../../../../core/widgets/auth_actionwidget.dart';
 import '../../../../core/widgets/auth_illustration_widget.dart';
 import '../../../../core/widgets/custom_button_widget.dart';
@@ -84,8 +85,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             previous.otpStatus != current.otpStatus,
                         builder: (context, state) {
                           if (state.otpStatus == OtpStatus.loading) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
+                            return Center(
+                              child: CustomProgressIndicator(
+                                onTap: () {
+                                  _registerBlocProvider.cancelRegistration();
+                                },
+                              ),
                             );
                           }
                           return StreamBuilder<Object>(

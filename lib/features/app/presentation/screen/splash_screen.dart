@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yaatra_client/features/authentication/presentation/screens/login_screen.dart';
 
 import '../../../../core/config/size.dart';
 import '../../../authentication/presentation/blocs/cubit/auth_cubit.dart';
@@ -23,21 +24,27 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: size(context).width,
-        height: size(context).width,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                "assets/images/illustrations/googleicon.png",
-                width: size(context).width * 0.25,
-                filterQuality: FilterQuality.high,
-              ),
+              // Image.asset(
+              //   "assets/images/illustrations/googleicon.png",
+              //   width: size(context).width * 0.25,
+              //   filterQuality: FilterQuality.high,
+              // ),
+
               SizedBox(height: size(context).height * 0.02),
               const Center(
                 child: CircularProgressIndicator(),
-              )
+              ),
+              SizedBox(height: size(context).height * 0.02),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushReplacementNamed(LoginScreen.routeName);
+                  },
+                  child: const Text("Go back to Login page"))
             ],
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:yaatra_client/features/authentication/data/models/otp_response_model.dart';
 
 import '../../../../../core/errors/exception.dart';
 import '../../../../../core/errors/failure.dart';
@@ -41,7 +42,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, int?>> sendOTPToPhone(String phone) async {
+  Future<Either<Failure, OtpResponseModel>> sendOTPToPhone(String phone) async {
     if (await networkInfo.isConnected) {
       try {
         final otp = await remoteDataSource.sendOTPToPhone(phone);
@@ -115,6 +116,25 @@ class UserRepositoryImpl implements UserRepository {
 
     } catch (e) {
       rethrow;
+    }
+  }
+
+  @override
+  Future<Either<Failure, OtpResponseModel>> verifySentOTPToPhone(
+      {required String phone,
+      required String hash,
+      required String otp}) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final otpDetails = await remoteDataSource.verifySentOTPToPhone(
+            hash: hash, otp: otp, phone: phone);
+        // perform caching only when it gets things from server successfully
+        return Right(otpDetails);
+      } on ServerFailure catch (e) {
+        return Left(e);
+      }
+    } else {
+      return Left(CacheFailure(properties: []));
     }
   }
 }

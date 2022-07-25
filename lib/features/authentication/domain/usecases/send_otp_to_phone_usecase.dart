@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:yaatra_client/features/authentication/data/models/otp_response_model.dart';
 
 import '../../../../../core/errors/failure.dart';
 import '../repositories/user_repository.dart';
@@ -8,7 +9,7 @@ class SendOTPToPhoneUseCase {
 
   SendOTPToPhoneUseCase(this.userRepository);
 
-  Future<Either<Failure, int?>> call({required String phone}) async {
+  Future<Either<Failure, OtpResponseModel>> call({required String phone}) async {
     return userRepository.sendOTPToPhone(phone);
   }
 }

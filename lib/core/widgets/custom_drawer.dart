@@ -107,8 +107,8 @@ class CustomDrawer extends StatelessWidget {
             ),
             CustomButton(
               onPressed: () {
-                // context.read<AppBloc>().add(AppLogoutRequested());
-                // _authCubit.emitInitialState;
+                context.read<AppBloc>().add(AppLogoutRequested());
+                _authCubit.emitInitialState;
                 Navigator.popUntil(context, (route) => false);
                 Navigator.push(
                   context,

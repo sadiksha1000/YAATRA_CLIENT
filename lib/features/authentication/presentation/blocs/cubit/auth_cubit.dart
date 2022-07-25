@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:yaatra_client/core/utils/status.dart';
+import 'package:yaatra_client/features/authentication/data/models/otp_response_model.dart';
+import 'package:yaatra_client/features/authentication/domain/usecases/verify_sent_otp_to_phone_usecase.dart';
 
 import '../../../../../../core/utils/input_converter.dart';
 import '../../../../../../core/utils/input_validator.dart';
@@ -27,6 +30,7 @@ class AuthCubit extends HydratedCubit<AuthState> with InputValidatorMixin {
   InputConverter inputConverter;
   InputValidator inputValidator;
   SendOTPToPhoneUseCase sendOTPToPhoneUseCase;
+  VerifySentOTPToPhoneUseCase verifySentOTPToPhoneUseCase;
   LoginUserUseCase loginUserUseCase;
   RefreshCurrentUserUseCase refreshCurrentUserUseCase;
   SwitchUserRoleUseCase switchUserRoleUseCase;
@@ -36,6 +40,7 @@ class AuthCubit extends HydratedCubit<AuthState> with InputValidatorMixin {
     required RegisterUserUseCase registerUseCase,
     required InputConverter inputCon,
     required SendOTPToPhoneUseCase sendOTPUseCase,
+    required VerifySentOTPToPhoneUseCase verifyOtpUseCase,
     required InputValidator inputValid,
     required LoginUserUseCase loginUseCase,
     required RefreshCurrentUserUseCase refreshCurrentUser,
@@ -49,7 +54,12 @@ class AuthCubit extends HydratedCubit<AuthState> with InputValidatorMixin {
         refreshCurrentUserUseCase = refreshCurrentUser,
         switchUserRoleUseCase = switchUserRole,
         networkInfo = networkIn,
+        verifySentOTPToPhoneUseCase = verifyOtpUseCase,
         super(AuthState.initial());
+
+  get emitInitialState {
+    emit(AuthState.initial());
+  }
 
   get emitInitialStatusState {
     emit(state.copyWith(
@@ -57,6 +67,7 @@ class AuthCubit extends HydratedCubit<AuthState> with InputValidatorMixin {
       loginStatus: AuthStatus.initial,
       registerStatus: AuthStatus.initial,
       currentUserStatus: AuthStatus.initial,
+      verifyOtpStatus: Status.initial,
     ));
   }
 
@@ -88,12 +99,16 @@ class AuthCubit extends HydratedCubit<AuthState> with InputValidatorMixin {
       Rx.combineLatest2(phoneNumber, phoneNumber, (a, b) => true);
 
   Stream<bool> get isLoginFormValid =>
-      Rx.combineLatest2(phoneNumber, phoneNumber, (a, b) => true);
+      Rx.combineLatest2(phoneNumber, password, (a, b) => true);
 
   Stream<bool> get isOTPValid => Rx.combineLatest2(otp, otp, (a, b) => true);
 
   Stream<bool> get isPasswordValid =>
       Rx.combineLatest2(password, confirmPassword, (a, b) => true);
+
+  void cancelLogin() {
+    emit(state.copyWith(loginStatus: AuthStatus.initial));
+  }
 
   Stream<bool> get isPasswordMatched async* {
     if (_passwordController.value == _confirmPasswordController.value) {
@@ -115,6 +130,7 @@ class AuthCubit extends HydratedCubit<AuthState> with InputValidatorMixin {
     emit(state.copyWith(
       registerStatus: AuthStatus.initial,
       otpStatus: OtpStatus.initial,
+      verifyOtpStatus: Status.initial,
     ));
   }
 
@@ -144,12 +160,21 @@ class AuthCubit extends HydratedCubit<AuthState> with InputValidatorMixin {
     );
   }
 
-  bool otpVerified() {
-    if (state.otp.toString() == _otpController.value) {
-      return true;
-    } else {
-      return false;
-    }
+  Future<void> otpVerified() async {
+    emit(state.copyWith(verifyOtpStatus: Status.loading));
+    final otpEither = await verifySentOTPToPhoneUseCase(
+      phone: _phoneNumberController.value,
+      otp: _otpController.value,
+      hash: state.otpResponse.hash,
+    );
+    otpEither.fold(
+      (failure) => emit(state.copyWith(
+          errorMessage: failure.message, verifyOtpStatus: Status.error)),
+      (otpRes) {
+        emit(state.copyWith(
+            otpResponse: otpRes, verifyOtpStatus: Status.success));
+      },
+    );
   }
 
   void sendOTP() {
@@ -167,8 +192,9 @@ class AuthCubit extends HydratedCubit<AuthState> with InputValidatorMixin {
         otpEither.fold(
             (failure) => emit(state.copyWith(
                 errorMessage: SERVER_FAILURE_MESSAGE,
-                otpStatus: OtpStatus.error)), (otp) {
-          emit(state.copyWith(otp: otp, otpStatus: OtpStatus.success));
+                otpStatus: OtpStatus.error)), (otpRes) {
+          emit(state.copyWith(
+              otpResponse: otpRes, otpStatus: OtpStatus.success));
         });
       },
     );

@@ -8,9 +8,11 @@ class AuthState extends Equatable {
   final AuthStatus registerStatus;
   final UserModel user;
   final int otp;
+  final OtpResponseModel otpResponse;
   final String successMessage;
   final String errorMessage;
   final OtpStatus otpStatus;
+  final Status verifyOtpStatus;
   final AuthStatus loginStatus;
   final AuthStatus currentUserStatus;
   const AuthState({
@@ -22,6 +24,8 @@ class AuthState extends Equatable {
     required this.successMessage,
     required this.loginStatus,
     required this.currentUserStatus,
+    required this.otpResponse,
+    required this.verifyOtpStatus,
   });
 
   factory AuthState.initial() => const AuthState(
@@ -33,6 +37,8 @@ class AuthState extends Equatable {
         successMessage: '',
         loginStatus: AuthStatus.initial,
         currentUserStatus: AuthStatus.initial,
+        otpResponse: OtpResponseModel.empty,
+        verifyOtpStatus: Status.initial,
       );
 
   AuthState copyWith({
@@ -44,6 +50,8 @@ class AuthState extends Equatable {
     String? successMessage,
     AuthStatus? loginStatus,
     AuthStatus? currentUserStatus,
+    OtpResponseModel? otpResponse,
+    Status? verifyOtpStatus,
   }) {
     return AuthState(
       registerStatus: registerStatus ?? this.registerStatus,
@@ -54,6 +62,8 @@ class AuthState extends Equatable {
       successMessage: successMessage ?? this.successMessage,
       loginStatus: loginStatus ?? this.loginStatus,
       currentUserStatus: currentUserStatus ?? this.currentUserStatus,
+      otpResponse: otpResponse ?? this.otpResponse,
+      verifyOtpStatus: verifyOtpStatus ?? this.verifyOtpStatus,
     );
   }
 
@@ -67,6 +77,8 @@ class AuthState extends Equatable {
         successMessage,
         loginStatus,
         currentUserStatus,
+        otpResponse,
+        verifyOtpStatus,
       ];
 
   /// {registerStatus: loading, user: {uid: "dfksjk", name: "dskjfsk"}}
@@ -80,6 +92,8 @@ class AuthState extends Equatable {
       'otpStatus': otpStatus.name,
       'loginStatus': loginStatus.name,
       'currentUserStatus': currentUserStatus.name,
+      'otpResponse': otpResponse.toMap(),
+      'verifyOtpStatus': verifyOtpStatus.name,
     };
   }
 
@@ -93,6 +107,8 @@ class AuthState extends Equatable {
       otpStatus: OtpStatus.values.byName(map['otpStatus']),
       loginStatus: AuthStatus.values.byName(map['loginStatus']),
       currentUserStatus: AuthStatus.values.byName(map['currentUserStatus']),
+      otpResponse: OtpResponseModel.fromMap(map['otpResponse']),
+      verifyOtpStatus: Status.values.byName(map['verifyOtpStatus']),
     );
   }
 
